@@ -3,9 +3,10 @@ Toolset for planning and triggering observations with ZTF. GCN parsing is curren
 
 It checks if the object is observable with a maximum airmass on a given date, plots the airmass vs. time, computes two optimal (minimal airmass at night) observations of 300s in g- and r and generate the ZTF field plots for all fields having a reference. There is also the option to create a longer (multiday) observation plan.
 
-[![DOI](https://zenodo.org/badge/512753573.svg)](https://zenodo.org/badge/latestdoi/512753573)
 [![CI](https://github.com/simeonreusch/planobs/actions/workflows/continous_integration.yml/badge.svg)](https://github.com/simeonreusch/planobs/actions/workflows/continous_integration.yml)
 [![Coverage Status](https://coveralls.io/repos/github/simeonreusch/planobs/badge.svg?branch=main)](https://coveralls.io/github/simeonreusch/planobs?branch=main)
+[![PyPI version](https://badge.fury.io/py/planobs.svg)](https://badge.fury.io/py/planobs)
+[![DOI](https://zenodo.org/badge/512753573.svg)](https://zenodo.org/badge/latestdoi/512753573)
 
 # Requirements
 [ztfquery](https://github.com/mickaelrigault/ztfquery) for checking if fields have a reference.
