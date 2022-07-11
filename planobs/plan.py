@@ -580,19 +580,12 @@ class PlanObservation:
 
     def request_ztf_fields(self, plot=True) -> list:
         """
-        This looks at yupana.caltech.edu for the fields matching
-        your location and downloads the camera grid plots for these
+        Get all fields that contain our target
         """
-
-        # URL = "http://yupana.caltech.edu/cgi-bin/ptf/tb//zoc"
-        # image_url = "http://yupana.caltech.edu/marshals/tb//igmo_0_"
-        # image_urls = [image_url + f"{x}.png" for x in [0, 1, 2, 3]]
-
         objra = self.ra
         objdec = self.dec
 
         radius = 0
-
         fieldids = list(fields.get_fields_containing_target(ra=self.ra, dec=self.dec))
         fieldids_ref = []
 
