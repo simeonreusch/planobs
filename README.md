@@ -3,6 +3,7 @@ Toolset for planning and triggering observations with ZTF. GCN parsing is curren
 
 It checks if the object is observable with a maximum airmass on a given date, plots the airmass vs. time, computes two optimal (minimal airmass at night) observations of 300s in g- and r and generate the ZTF field plots for all fields having a reference. There is also the option to create a longer (multiday) observation plan.
 
+[![DOI](https://zenodo.org/badge/512753573.svg)](https://zenodo.org/badge/latestdoi/512753573)
 [![CI](https://github.com/simeonreusch/planobs/actions/workflows/continous_integration.yml/badge.svg)](https://github.com/simeonreusch/planobs/actions/workflows/continous_integration.yml)
 [![Coverage Status](https://coveralls.io/repos/github/simeonreusch/planobs/badge.svg?branch=main)](https://coveralls.io/github/simeonreusch/planobs?branch=main)
 
@@ -122,3 +123,14 @@ trigger_name = "ToO_IC220513A_test"
 
 res = q.delete_trigger(trigger_name=trigger_name)
 ```
+
+# Citing the code
+
+If you make use of this code, please cite it! A DOI is provided by Zenodo, which can reference both the code repository and specific releases:
+
+[![DOI](https://zenodo.org/badge/512753573.svg)](https://zenodo.org/badge/latestdoi/512753573)
+
+# Contributors
+
+* Simeon Reusch [@simeonreusch](https://github.com/simeonreusch)
+* Robert Stein [@robertdstein](https://github.com/robertdstein)
