@@ -1,5 +1,7 @@
 import unittest
+import os
 import logging
+import shutil
 
 import matplotlib.pyplot as plt
 
@@ -294,3 +296,13 @@ class TestPlan(unittest.TestCase):
 
         for t in trigger_in_q_list:
             self.assertIn(t, trigger_in_q_expected_list)
+
+    def tearDown(self):
+        names = [
+            "ZTF19accdntg",
+            "IC220624A" "IC220501A",
+        ]
+
+        for name in names:
+            if os.path.exists(name):
+                shutil.rmtree(name)

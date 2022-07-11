@@ -1,24 +1,24 @@
-# ztf_plan_obs
+# planobs
 Toolset for planning and triggering observations with ZTF. GCN parsing is currently only implemented for IceCube alerts.
 
 It checks if the object is observable with a maximum airmass on a given date, plots the airmass vs. time, computes two optimal (minimal airmass at night) observations of 300s in g- and r and generate the ZTF field plots for all fields having a reference. There is also the option to create a longer (multiday) observation plan.
 
-[![CI](https://github.com/simeonreusch/ztf_plan_obs/actions/workflows/continous_integration.yml/badge.svg)](https://github.com/simeonreusch/ztf_plan_obs/actions/workflows/continous_integration.yml)
-[![Coverage Status](https://coveralls.io/repos/github/simeonreusch/ztf_plan_obs/badge.svg?branch=main)](https://coveralls.io/github/simeonreusch/ztf_plan_obs?branch=main)
+[![CI](https://github.com/simeonreusch/planobs/actions/workflows/continous_integration.yml/badge.svg)](https://github.com/simeonreusch/planobs/actions/workflows/continous_integration.yml)
+[![Coverage Status](https://coveralls.io/repos/github/simeonreusch/planobs/badge.svg?branch=main)](https://coveralls.io/github/simeonreusch/planobs?branch=main)
 
 # Requirements
 [ztfquery](https://github.com/mickaelrigault/ztfquery) for checking if fields have a reference.
 
-ztf_plan_obs requires at least Python 3.7
+planobs requires at least Python 3.9
 
 # Installation
-Using Pip: ```pip3 install ztf_plan_obs```.
+Using Pip: ```pip install planobs```.
 
-Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/ztf_plan_obs```. This also gives you access to the Slackbot.
+Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/planobs```. This also gives you access to the Slackbot.
 
 # General usage
 ```python
-from ztf_plan_obs.plan import PlanObservation
+from planobs.plan import PlanObservation
 
 name = "testalert" # Name of the alert object
 date = "2020-05-05" #This is optional, defaults to today
@@ -37,7 +37,7 @@ Note: Checking if fields have references requires ztfquery, which needs IPAC cre
 
 # Usage for IceCube alerts
 ```python
-from ztf_plan_obs.plan import PlanObservation
+from planobs.plan import PlanObservation
 
 name = "IC201007A" # Name of the alert object
 date = "2020-10-08" #This is optional, defaults to today
@@ -58,7 +58,7 @@ print(plan.recommended_field) # In case there is an error in the
 
 # Triggering ZTF
 
-`ztf_plan_obs` can be used for directly scheduling ToO observations with ZTF. 
+`planobs` can be used for directly scheduling ToO observations with ZTF. 
 This is done through API calls to the `Kowalski` system, managed by the kowalski python manager [penquins](https://github.com/dmitryduev/penquins).
 
 To use this functionality, you must first configure the connection details. You need both an API token, and to know the address of the Kowalski host address. You can then set these as environment variables:
@@ -73,7 +73,7 @@ You can then import the Queue class for querying, submitting and deleting ToO tr
 ## Querying
 
 ```python
-from ztf_plan_obs.api import Queue
+from planobs.api import Queue
 
 q = Queue(user="yourname")
 
@@ -84,7 +84,7 @@ print(existing_too_requests)
 ## Submitting
 
 ```python
-from ztf_plan_obs.api import Queue
+from planobs.api import Queue
 
 trigger_name = "ToO_IC220513A_test"
 
@@ -114,7 +114,7 @@ assert trigger_name in existing_too_requests
 
 ## Deleting
 ```python
-from ztf_plan_obs.api import Queue
+from planobs.api import Queue
 
 q = Queue(user="yourname")
 
