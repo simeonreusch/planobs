@@ -7,8 +7,8 @@ MAINTAINER = "Simeon Reusch"
 MAINTAINER_EMAIL = "simeon.reusch@desy.de"
 URL = "https://github.com/simeonreusch/planobs/"
 LICENSE = "BSD (3-clause)"
-DOWNLOAD_URL = "https://github.com/simeonreusch/planobs/archive/v0.40.tar.gz"
-VERSION = "0.40"
+DOWNLOAD_URL = "https://github.com/simeonreusch/planobs/archive/v0.4.2.tar.gz"
+VERSION = "0.4.2"
 
 try:
     from setuptools import setup, find_packages
