@@ -300,9 +300,10 @@ class TestPlan(unittest.TestCase):
     def tearDown(self):
         names = [
             "ZTF19accdntg",
-            "IC220624A" "IC220501A",
+            "IC220624A",
+            "IC220501A",
         ]
 
         for name in names:
-            if os.path.exists(name):
+            if os.path.exists(os.path.join("..", name)):
                 shutil.rmtree(name)
