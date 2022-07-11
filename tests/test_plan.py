@@ -2,6 +2,7 @@ import unittest
 import os
 import logging
 import shutil
+import time
 
 import matplotlib.pyplot as plt
 
@@ -283,6 +284,8 @@ class TestPlan(unittest.TestCase):
 
         q.submit_queue()
 
+        time.sleep(5)
+
         current_too_queue = q.get_too_queues()
 
         trigger_in_q_list = [
@@ -303,7 +306,8 @@ class TestPlan(unittest.TestCase):
             "IC220624A",
             "IC220501A",
         ]
+        cwd = os.getcwd()
 
         for name in names:
-            if os.path.exists(os.path.join("..", name)):
+            if os.path.exists(os.path.join(cwd, name)):
                 shutil.rmtree(name)
