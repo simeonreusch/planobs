@@ -1,8 +1,6 @@
 # .coveragerc to control coverage.py
 [run]
-source = ztf_plan_obs
-omit =
-    nuztf/TNS_submit.py
+source = planobs
 
 [report]
 # Regexes for lines to exclude from consideration
