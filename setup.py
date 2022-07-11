@@ -37,6 +37,7 @@ if __name__ == "__main__":
         "shapely",
         "geopandas",
         "tqdm",
+        "typing_extensions",
     ]
 
     setup(
