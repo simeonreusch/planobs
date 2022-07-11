@@ -31,7 +31,7 @@ if __name__ == "__main__":
         "penquins",
         "matplotlib",
         "flask",
-        "ztfquery>=1.15.7",
+        "ztfquery==1.18.2",
         "lxml",
         "html5lib",
         "shapely",
@@ -55,7 +55,7 @@ if __name__ == "__main__":
         packages=find_packages(),
         classifiers=[
             "Intended Audience :: Science/Research",
-            "Programming Language :: Python :: 3.8",
+            "Programming Language :: Python :: 3.10",
             "License :: OSI Approved :: BSD License",
             "Topic :: Scientific/Engineering :: Astronomy",
             "Operating System :: POSIX",

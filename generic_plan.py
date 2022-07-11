@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from ztf_plan_obs.plan import PlanObservation
+from planobs.plan import PlanObservation
 
 name = "ZTF19accdntg"  # Name of the alert object
 date = "2021-07-22"  # This is optional, defaults to today

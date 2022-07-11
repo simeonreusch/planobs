@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 import matplotlib.pyplot as plt
 
-from ztf_plan_obs.plan import PlanObservation
-from ztf_plan_obs.multiday_plan import MultiDayObservation
-from ztf_plan_obs.api import Queue
+from planobs.plan import PlanObservation
+from planobs.multiday_plan import MultiDayObservation
+from planobs.api import Queue
 
 name = "IC220624A"  # Name of the alert object
 # name = "IC201007A"

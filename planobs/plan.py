@@ -20,7 +20,7 @@ from astroplan.plots import plot_airmass, plot_altitude
 from ztfquery import fields, query
 from shapely.geometry import Polygon
 
-from ztf_plan_obs import gcn_parser, utils
+from planobs import gcn_parser, utils
 
 icecube = ["IceCube", "IC", "icecube", "ICECUBE", "Icecube"]
 ztf = ["ZTF", "ztf"]
@@ -146,7 +146,7 @@ class PlanObservation:
                 logger.info(
                     f"{name} is a ZTF name. Looking in Fritz database for ra/dec"
                 )
-                from ztf_plan_obs.fritzconnector import FritzInfo
+                from planobs.fritzconnector import FritzInfo
 
                 fritz = FritzInfo([name])
 

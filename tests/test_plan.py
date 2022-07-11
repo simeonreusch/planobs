@@ -3,11 +3,11 @@ import logging
 
 import matplotlib.pyplot as plt
 
-from ztf_plan_obs import credentials
-from ztf_plan_obs.plan import PlanObservation
-from ztf_plan_obs.multiday_plan import MultiDayObservation
-from ztf_plan_obs.api import Queue, APIError
-from ztf_plan_obs.gcn_parser import parse_latest_gcn_notice
+from planobs import credentials
+from planobs.plan import PlanObservation
+from planobs.multiday_plan import MultiDayObservation
+from planobs.api import Queue, APIError
+from planobs.gcn_parser import parse_latest_gcn_notice
 
 
 class TestPlan(unittest.TestCase):

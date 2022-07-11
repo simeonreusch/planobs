@@ -12,7 +12,7 @@ from slack import WebClient
 from slackeventsapi import SlackEventAdapter
 from slackbot import Slackbot
 from astropy.coordinates import EarthLocation
-from ztf_plan_obs.api import Queue
+from planobs.api import Queue
 
 app = Flask(__name__)
 
