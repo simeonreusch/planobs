@@ -1,66 +1,42 @@
-DESCRIPTION = "Plan observations with the Zwicky Transient Facility"
-LONG_DESCRIPTION = """Plan observations with the Zwicky Transient Facility. Automated parsing of GCN is only implemented for IceCube at the moment."""
+import setuptools
 
-DISTNAME = "planobs"
-AUTHOR = "Simeon Reusch"
-MAINTAINER = "Simeon Reusch"
-MAINTAINER_EMAIL = "simeon.reusch@desy.de"
-URL = "https://github.com/simeonreusch/planobs/"
-LICENSE = "BSD (3-clause)"
-DOWNLOAD_URL = "https://github.com/simeonreusch/planobs/archive/v0.4.2.tar.gz"
-VERSION = "0.4.2"
+with open("README.md", "r") as fh:
+    long_description = fh.read()
 
-try:
-    from setuptools import setup, find_packages
-
-except ImportError:
-    from distutils.core import setup
-
-    raise Exception("Please install python3 setuptools")
-
-
-if __name__ == "__main__":
-
-    install_requires = [
+setuptools.setup(
+    name="nuztf",
+    version="0.4.2",
+    author="Simeon Reusch",
+    author_email="simeon.reusch@desy.de",
+    description="Plan observations with the Zwicky Transient Facility",
+    long_description=long_description,
+    long_description_content_type="text/markdown",
+    license="BSD (3-clause)",
+    keywords="astronomy astrophysics",
+    url="https://github.com/simeonreusch/planobs",
+    packages=setuptools.find_packages(),
+    classifiers=[
+        "License :: OSI Approved :: BSD (3-clause)",
+        "Operating System :: OS Independent",
+        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.10",
+    ],
+    python_requires=">=3.8.0",
+    install_requires=[
+        "astroplan>=0.7",
         "astropy",
         "astroquery",
         "coveralls",
-        "numpy",
-        "astroplan>=0.7",
+        "flask",
+        "geopandas",
+        "html5lib",
+        "lxml",
         "pandas",
         "penquins",
         "matplotlib",
-        "flask",
-        "ztfquery==1.18.2",
-        "lxml",
-        "html5lib",
+        "numpy",
         "shapely",
-        "geopandas",
         "tqdm",
-        "typing_extensions",
-    ]
-
-    setup(
-        name=DISTNAME,
-        author=AUTHOR,
-        author_email=MAINTAINER_EMAIL,
-        maintainer=MAINTAINER,
-        maintainer_email=MAINTAINER_EMAIL,
-        description=DESCRIPTION,
-        long_description=LONG_DESCRIPTION,
-        license=LICENSE,
-        url=URL,
-        version=VERSION,
-        download_url=DOWNLOAD_URL,
-        install_requires=install_requires,
-        packages=find_packages(),
-        classifiers=[
-            "Intended Audience :: Science/Research",
-            "Programming Language :: Python :: 3.10",
-            "License :: OSI Approved :: BSD License",
-            "Topic :: Scientific/Engineering :: Astronomy",
-            "Operating System :: POSIX",
-            "Operating System :: Unix",
-            "Operating System :: MacOS",
-        ],
-    )
+        "ztfquery",
+    ],
+)
