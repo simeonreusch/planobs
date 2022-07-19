@@ -2,9 +2,17 @@
 # Author: Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import re
-from astropy.time import Time
-from astropy import units as u
+import re, os, logging
+
+import pandas as pd  # type: ignore
+
+from tqdm import tqdm  # type: ignore
+
+import ztfquery  # type: ignore
+from astropy.time import Time  # type: ignore
+from astropy import units as u  # type: ignore
+
+logger = logging.getLogger()
 
 
 def is_ztf_name(name):
@@ -76,3 +84,30 @@ def mjd_to_isotime(mjd: float):
     Convert time in mjd to iso-format
     """
     return Time(mjd, format="mjd", scale="utc").iso
+
+
+def get_references() -> None:
+    """
+    Query IPAC for all references in case some have changed
+    """
+    from ztfquery import query
+
+    datadir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "data", "references")
+    )
+    fields_infile = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "data", "ztf_fields.csv")
+    )
+
+    field_df = pd.read_csv(fields_infile)
+
+    logger.info(f"Getting references from IPAC for all ZTF fields")
+
+    for fieldid in tqdm(field_df.ID.unique()[:3]):
+        outfile = os.path.join(datadir, f"{fieldid}_references.csv")
+        zq = query.ZTFQuery()
+        querystring = f"field={fieldid}"
+
+        zq.load_metadata(kind="ref", sql_query=querystring)
+        mt = zq.metatable
+        mt.to_csv(outfile)
