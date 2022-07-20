@@ -40,10 +40,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
      # Setting up dependencies
-      - name: Install dependencies
+      - name: Install dependencies (with all extras)
         run: |
-          pip install wheel
-          pip install -e .
+          poetry install --extras "slack"
 
       # Runs a set of commands using the runners shell
       - name: Test the code
@@ -56,9 +55,7 @@ jobs:
           FRITZ_TOKEN: ${{ secrets.fritz_token }}
           ZTFDATA: ./
         run: |
-          coverage run -m unittest discover tests/
-
-# coverage combine
+          poetry run coverage run -m unittest discover tests/
 
       - name: Run Coveralls
         env:
@@ -66,30 +63,33 @@ jobs:
         if: ${{ success() }}
         run: coveralls
 
-
       - name: Echo tag name
         run: echo "Tag is ${{ github.ref }}, Tagged is ${{ startsWith(github.ref, 'refs/tags/')}}, Python Check is ${{matrix.python-version == 3.10}},  Deploy is ${{ startsWith(github.ref, 'refs/tags/') && matrix.python-version == 3.10}}"
 
-      - name: Install pypa/build
+      - name: Install poetry
         run: >-
-          python -m
-          pip install
-          build
-          --user
-          
-      - name: Build a binary wheel and a source tarball
-        run: >-
-          python -m
-          build
-          --sdist
-          --wheel
-          --outdir dist/
-          .
+          python -m pip install --upgrade poetry
 
-      - name: Publish distribution 📦 to PyPI
+      - name: Buid and publish
         if: ${{ startsWith(github.ref, 'refs/tags/') && success() && matrix.python-version == 3.10}}
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          user: __token__
-          password: ${{ secrets.PYPI_API_TOKEN }}
+        run: |
+          poetry publish -n --build
+        env:
+          POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
+          
+      # - name: Build a binary wheel and a source tarball
+      #   run: >-
+      #     python -m
+      #     build
+      #     --sdist
+      #     --wheel
+      #     --outdir dist/
+      #     .
+
+      # - name: Publish distribution 📦 to PyPI
+      #   if: ${{ startsWith(github.ref, 'refs/tags/') && success() && matrix.python-version == 3.10}}
+      #   uses: pypa/gh-action-pypi-publish@release/v1
+      #   with:
+      #     user: __token__
+      #     password: ${{ secrets.PYPI_API_TOKEN }}
 
