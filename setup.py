@@ -22,6 +22,12 @@ setuptools.setup(
         "Programming Language :: Python :: 3.10",
     ],
     python_requires=">=3.8.0",
+    package_data={
+        "planobs": [
+            "data/*.csv",
+            "data/references/*.csv",
+        ]
+    },
     install_requires=[
         "astroplan>=0.7",
         "astropy",

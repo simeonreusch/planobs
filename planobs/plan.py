@@ -19,7 +19,7 @@ from datetime import datetime
 from astroplan.plots import plot_airmass, plot_altitude
 from ztfquery import fields, query  # type: ignore
 from shapely.geometry import Polygon  # type: ignore
-from typing import Union
+from typing import Union, Optional
 
 from planobs import gcn_parser, utils
 
@@ -256,10 +256,10 @@ class PlanObservation:
             self.observable = False
             self.rejection_reason = "proximity to gal. plane"
 
-        # self.g_band_recommended_time_start = None
-        # self.g_band_recommended_time_end = None
-        # self.r_band_recommended_time_start = None
-        # self.r_band_recommended_time_end = None
+        self.g_band_recommended_time_start: Optional[astropy.time.core.Time] = None
+        self.g_band_recommended_time_end: Optional[astropy.time.core.Time] = None
+        self.r_band_recommended_time_start: Optional[astropy.time.core.Time] = None
+        self.r_band_recommended_time_end: Optional[astropy.time.core.Time] = None
 
         if self.observable:
             min_airmass = np.min(airmasses_included)

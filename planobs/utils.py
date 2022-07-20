@@ -2,9 +2,9 @@
 # Author: Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import re, os, logging, itertools
+import re, os, logging, itertools, time
 
-import os, time
+from typing import List
 from io import StringIO
 
 import pandas as pd  # type: ignore
@@ -13,6 +13,7 @@ from tqdm import tqdm  # type: ignore
 
 import requests
 
+import astropy  # type: ignore
 from astropy.time import Time  # type: ignore
 from astropy import units as u  # type: ignore
 
@@ -23,7 +24,11 @@ def is_ztf_name(name) -> bool:
     """
     Checks if a string adheres to the ZTF naming scheme
     """
-    return re.match("^ZTF[1-2]\d[a-z]{7}$", name)
+    if re.match("^ZTF[1-2]\d[a-z]{7}$", name):
+        match = True
+    else:
+        match = False
+    return match
 
 
 def is_icecube_name(name) -> bool:
@@ -31,13 +36,17 @@ def is_icecube_name(name) -> bool:
     Checks if a string adheres to the IceCube naming scheme
     (e.g. IC201021B)
     """
-    return re.match(
+    if re.match(
         "^IC((\d{2}((0[13578]|1[02])(0[1-9]|[12]\d|3[01])|(0[13456789]|1[012])(0[1-9]|[12]\d|30)|02(0[1-9]|1\d|2[0-8])))|([02468][048]|[13579][26])0229)[a-zA-Z]$",
         name,
-    )
+    ):
+        match = True
+    else:
+        match = False
+    return match
 
 
-def round_time(time):
+def round_time(time) -> astropy.time.core.Time:
     """
     Better readable time - round to next minute
     """
@@ -46,6 +55,7 @@ def round_time(time):
         time_rounded = time - secs * u.s
     else:
         time_rounded = time + (60 - secs) * u.s
+
     return time_rounded
 
 
@@ -117,7 +127,7 @@ def get_references() -> None:
     fieldids = field_df.ID.values.tolist()
 
     # Now we create bunches of 200 fieldids, otherwise IPAC complains
-    fieldids_grouped = [
+    fieldids_grouped: List[list] = [
         list(filter(None, list(i)))
         for i in list(itertools.zip_longest(*[iter(fieldids)] * 400))
     ]
@@ -145,3 +155,6 @@ def get_references() -> None:
         logger.info(
             f"This request for {len(fieldids)} fields took {t_end - t_start:.1f} seconds"
         )
+
+
+# def check_references():
