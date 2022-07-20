@@ -2,27 +2,31 @@
 # Author: Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import re, os, logging
+import re, os, logging, itertools
+
+import os, time
+from io import StringIO
 
 import pandas as pd  # type: ignore
 
 from tqdm import tqdm  # type: ignore
 
-import ztfquery  # type: ignore
+import requests
+
 from astropy.time import Time  # type: ignore
 from astropy import units as u  # type: ignore
 
 logger = logging.getLogger()
 
 
-def is_ztf_name(name):
+def is_ztf_name(name) -> bool:
     """
     Checks if a string adheres to the ZTF naming scheme
     """
     return re.match("^ZTF[1-2]\d[a-z]{7}$", name)
 
 
-def is_icecube_name(name):
+def is_icecube_name(name) -> bool:
     """
     Checks if a string adheres to the IceCube naming scheme
     (e.g. IC201021B)
@@ -45,14 +49,14 @@ def round_time(time):
     return time_rounded
 
 
-def short_time(time):
+def short_time(time) -> str:
     """
     Better readable time - remove subseconds
     """
     return str(time)[:-4]
 
 
-def mjd_delta_to_seconds(mjd_start, mjd_end):
+def mjd_delta_to_seconds(mjd_start, mjd_end) -> float:
     """
     Convert t_end - t_start (duration of obs)
     given in mjd into a time delta in seconds
@@ -60,7 +64,7 @@ def mjd_delta_to_seconds(mjd_start, mjd_end):
     return round((mjd_end - mjd_start) * 86400)
 
 
-def isotime_delta_to_seconds(isotime_start, isotime_end):
+def isotime_delta_to_seconds(isotime_start, isotime_end) -> float:
     """
     Convert t_end - t_start (duration of obs) given in iso-time
     into a time delta in seconds
@@ -72,14 +76,14 @@ def isotime_delta_to_seconds(isotime_start, isotime_end):
     return round((mjd_end - mjd_start) * 86400)
 
 
-def isotime_to_mjd(isotime: str):
+def isotime_to_mjd(isotime: str) -> float:
     """
     Convert time in iso-format to mjd
     """
     return float(Time(isotime, format="iso", scale="utc").mjd)
 
 
-def mjd_to_isotime(mjd: float):
+def mjd_to_isotime(mjd: float) -> str:
     """
     Convert time in mjd to iso-format
     """
@@ -90,7 +94,9 @@ def get_references() -> None:
     """
     Query IPAC for all references in case some have changed
     """
-    from ztfquery import query
+    from ztfquery import io  # type: ignore
+
+    login_url = "https://irsa.ipac.caltech.edu/account/signon/login.do"
 
     datadir = os.path.abspath(
         os.path.join(os.path.dirname(__file__), "data", "references")
@@ -103,11 +109,40 @@ def get_references() -> None:
 
     logger.info(f"Getting references from IPAC for all ZTF fields")
 
-    for fieldid in tqdm(field_df.ID.unique()[:3]):
-        outfile = os.path.join(datadir, f"{fieldid}_references.csv")
-        zq = query.ZTFQuery()
-        querystring = f"field={fieldid}"
+    username, password = io._load_id_("irsa")
 
-        zq.load_metadata(kind="ref", sql_query=querystring)
-        mt = zq.metatable
-        mt.to_csv(outfile)
+    cookie_url = f"{login_url}?josso_cmd=login&josso_username={username}&josso_password={password}"
+    cookies = requests.get(cookie_url).cookies
+
+    fieldids = field_df.ID.values.tolist()
+
+    # Now we create bunches of 200 fieldids, otherwise IPAC complains
+    fieldids_grouped = [
+        list(filter(None, list(i)))
+        for i in list(itertools.zip_longest(*[iter(fieldids)] * 400))
+    ]
+
+    for fieldids in fieldids_grouped:
+        basequery = f"field={fieldids[0]}"
+
+        if len(fieldids) > 1:
+            for f in fieldids[1:]:
+                basequery += f" OR field={f}"
+
+        query_url = f"https://irsa.ipac.caltech.edu/ibe/search/ztf/products/ref?WHERE={basequery}&ct=csv"
+
+        t_start = time.time()
+        datain = StringIO(
+            requests.get(query_url, cookies=cookies).content.decode("utf-8")
+        )
+        t_end = time.time()
+        metatable = pd.read_csv(datain)
+        print(metatable)
+        for fieldid in metatable.field.unique():
+            _df = metatable.query("field == @fieldid")
+            outfile = os.path.join(datadir, f"{fieldid}_references.csv")
+            _df.to_csv(outfile)
+
+        logger.info(
+            f"This request for {len(fieldids)} fields took {t_end - t_start:.1f} seconds"
+        )
