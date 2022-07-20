@@ -100,7 +100,7 @@ def mjd_to_isotime(mjd: float) -> str:
     return Time(mjd, format="mjd", scale="utc").iso
 
 
-def get_references() -> None:
+def get_all_references_from_ipac() -> None:
     """
     Query IPAC for all references in case some have changed
     """
@@ -149,6 +149,7 @@ def get_references() -> None:
         metatable = pd.read_csv(datain)
         for fieldid in metatable.field.unique():
             _df = metatable.query("field == @fieldid")
+            _df = _df.reset_index(drop=True)
             outfile = os.path.join(datadir, f"{fieldid}_references.csv")
             _df.to_csv(outfile)
 
@@ -157,4 +158,20 @@ def get_references() -> None:
         )
 
 
-# def check_references():
+def get_references(fieldids: list) -> pd.DataFrame:
+    """
+    Return the reference dataframes for all fieldids passed
+    """
+    datadir = os.path.abspath(
+        os.path.join(os.path.dirname(__file__), "data", "references")
+    )
+    df_list = []
+
+    for fieldid in fieldids:
+        infile = os.path.join(datadir, f"{fieldid}_references.csv")
+        df = pd.read_csv(infile, index_col=0)
+        df_list.append(df)
+
+    reference_df = pd.concat(df_list).reset_index(drop=True)
+
+    return reference_df

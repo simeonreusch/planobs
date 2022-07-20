@@ -582,7 +582,9 @@ class PlanObservation:
                 self.datasource = f"GCN Circular {self.gcn_nr}\n"
                 logger.info("Archival data found, using these.")
 
-    def request_ztf_fields(self, plot=True) -> list:
+    def request_ztf_fields(
+        self, plot: bool = True, load_refs_from_archive: bool = True
+    ) -> list:
         """
         Get all fields that contain our target
         """
@@ -591,19 +593,23 @@ class PlanObservation:
         fieldids = list(fields.get_fields_containing_target(ra=self.ra, dec=self.dec))
         fieldids_ref = []
 
-        zq = query.ZTFQuery()
-        querystring = f"field={fieldids[0]}"
+        if load_refs_from_archive:
+            mt = utils.get_references(fieldids)
+            print(mt)
 
-        if len(fieldids) > 1:
-            for f in fieldids[1:]:
-                querystring += f" OR field={f}"
+        else:
+            zq = query.ZTFQuery()
+            querystring = f"field={fieldids[0]}"
 
-        logger.info(
-            f"Checking IPAC if references are available in g- and r-band for fields {fieldids}"
-        )
+            if len(fieldids) > 1:
+                for f in fieldids[1:]:
+                    querystring += f" OR field={f}"
 
-        zq.load_metadata(kind="ref", sql_query=querystring)
-        mt = zq.metatable
+            logger.info(
+                f"Checking IPAC if references are available in g- and r-band for fields {fieldids}"
+            )
+            zq.load_metadata(kind="ref", sql_query=querystring)
+            mt = zq.metatable
 
         for f in mt.field.unique():
             d = {k: k in mt["filtercode"].values for k in ["zg", "zr", "zi"]}
