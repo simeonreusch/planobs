@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 import os, logging
 from datetime import datetime, date
-from matplotlib.backends.backend_pdf import PdfPages
-from tqdm import tqdm
-from astropy.time import Time
-from astropy import units as u
+from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
+from tqdm import tqdm  # type: ignore
+from astropy.time import Time  # type: ignore
+from astropy import units as u  # type: ignore
 from planobs.plan import PlanObservation
 from planobs.utils import (
     round_time,

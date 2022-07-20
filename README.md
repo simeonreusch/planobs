@@ -11,7 +11,7 @@ It checks if the object is observable with a maximum airmass on a given date, pl
 # Requirements
 [ztfquery](https://github.com/mickaelrigault/ztfquery) for checking if fields have a reference.
 
-planobs requires at least Python 3.9
+planobs requires at least Python 3.8
 
 # Installation
 Using Pip: ```pip install planobs```.

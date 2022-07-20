@@ -137,7 +137,6 @@ def get_references() -> None:
         )
         t_end = time.time()
         metatable = pd.read_csv(datain)
-        print(metatable)
         for fieldid in metatable.field.unique():
             _df = metatable.query("field == @fieldid")
             outfile = os.path.join(datadir, f"{fieldid}_references.csv")

@@ -5,9 +5,10 @@
 
 import os, time, re, logging
 import numpy as np
-import pandas as pd
-from astropy.time import Time
+import pandas as pd  # type: ignore
+from astropy.time import Time  # type: ignore
 import requests
+from typing import Tuple, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -62,8 +63,8 @@ def parse_gcn_circular(gcn_number):
             and ("DEC" in splittext[i + 1] or "Dec" in splittext[i + 1])
             and i < mainbody_starts_here
         ):
-            ra, ra_upper, ra_lower = parse_radec(line)
-            dec, dec_upper, dec_lower = parse_radec(splittext[i + 1])
+            ra, ra_upper, ra_lower = parse_radec(searchstring=line)
+            dec, dec_upper, dec_lower = parse_radec(searchstring=splittext[i + 1])
             if ra_upper and ra_lower:
                 ra_err = [ra_upper, -ra_lower]
             else:
@@ -92,9 +93,10 @@ def parse_gcn_circular(gcn_number):
     return returndict
 
 
-def parse_radec(str: str):
+# The typing does not work here
+def parse_radec(searchstring: str) -> Tuple[float, Optional[float], Optional[float]]:
     """ """
-    regex_findall = re.findall(r"[-+]?\d*\.\d+|\d+", str)
+    regex_findall = re.findall(r"[-+]?\d*\.\d+|\d+", searchstring)
 
     if len(regex_findall) == 2:
         pos = float(regex_findall[0])
@@ -105,12 +107,11 @@ def parse_radec(str: str):
         pos_upper = float(regex_findall[1])
         pos_lower = float(regex_findall[1])
     elif len(regex_findall) == 5:
-        pos, pos_upper, pos_lower = regex_findall[0:3]
-        pos = float(pos)
-        pos_upper = float(pos_upper.replace("+", ""))
-        pos_lower = float(pos_lower.replace("-", ""))
+        pos = float(regex_findall[0])
+        pos_upper = float(regex_findall[1].replace("+", ""))
+        pos_lower = float(regex_findall[2].replace("-", ""))
     else:
-        raise ParsingError(f"Could not parse GCN ra and dec")
+        raise ParsingError(f"Could not parse GCN RA and Dec")
 
     logger.debug(pos, pos_upper, pos_lower)
 

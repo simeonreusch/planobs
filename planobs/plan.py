@@ -4,21 +4,22 @@
 # License: BSD-3-Clause
 
 import time, os, warnings, typing, logging
-import astropy
-from astropy.time import Time
-from astropy import units as u
-from astropy.coordinates import SkyCoord, AltAz
+import astropy  # type: ignore
+from astropy.time import Time  # type: ignore
+from astropy import units as u  # type: ignore
+from astropy.coordinates import SkyCoord, AltAz  # type: ignore
 import os, time, re
 import numpy as np
-import matplotlib.pyplot as plt
-import pandas as pd
-import astroplan as ap
-from astroplan import Observer, is_observable
-from astroplan.plots import plot_finder_image
+import matplotlib.pyplot as plt  # type: ignore
+import pandas as pd  # type: ignore
+import astroplan as ap  # type: ignore
+from astroplan import Observer, is_observable  # type: ignore
+from astroplan.plots import plot_finder_image  # type: ignore
 from datetime import datetime
 from astroplan.plots import plot_airmass, plot_altitude
-from ztfquery import fields, query
-from shapely.geometry import Polygon
+from ztfquery import fields, query  # type: ignore
+from shapely.geometry import Polygon  # type: ignore
+from typing import Union
 
 from planobs import gcn_parser, utils
 
@@ -45,7 +46,7 @@ class PlanObservation:
         bands: list = ["g", "r"],
         multiday: bool = False,
         alertsource: str = None,
-        site: str = "Palomar",
+        site: Union[str, Observer] = "Palomar",
         verbose: bool = True,
         **kwargs,
     ) -> None:
@@ -68,7 +69,7 @@ class PlanObservation:
         self.search_full_archive = False
         self.coverage = None
         self.recommended_field = None
-        self.summary = {}
+        # self.summary: dict = {}
 
         if ra is None and self.alertsource in icecube:
             if verbose:
@@ -169,7 +170,10 @@ class PlanObservation:
         self.coordinates = SkyCoord(self.ra * u.deg, self.dec * u.deg, frame="icrs")
         self.coordinates_galactic = self.coordinates.galactic
         self.target = ap.FixedTarget(name=self.name, coord=self.coordinates)
-        self.site = Observer.at_site(self.site, timezone="US/Pacific")
+
+        if isinstance(self.site, str):
+            self.site = Observer.at_site(self.site, timezone="US/Pacific")
+
         self.now = Time(datetime.utcnow())
         self.date = date
 
@@ -252,10 +256,10 @@ class PlanObservation:
             self.observable = False
             self.rejection_reason = "proximity to gal. plane"
 
-        self.g_band_recommended_time_start = None
-        self.g_band_recommended_time_end = None
-        self.r_band_recommended_time_start = None
-        self.r_band_recommended_time_end = None
+        # self.g_band_recommended_time_start = None
+        # self.g_band_recommended_time_end = None
+        # self.r_band_recommended_time_start = None
+        # self.r_band_recommended_time_end = None
 
         if self.observable:
             min_airmass = np.min(airmasses_included)
@@ -582,8 +586,6 @@ class PlanObservation:
         """
         Get all fields that contain our target
         """
-        objra = self.ra
-        objdec = self.dec
 
         radius = 0
         fieldids = list(fields.get_fields_containing_target(ra=self.ra, dec=self.dec))

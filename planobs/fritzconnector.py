@@ -5,8 +5,8 @@
 import logging
 import multiprocessing
 import numpy as np
-from ztfquery import io
-from tqdm import tqdm
+from ztfquery import io  # type: ignore
+from tqdm import tqdm  # type: ignore
 
 MARSHAL_BASEURL = "http://skipper.caltech.edu:8080/cgi-bin/growth/view_avro.cgi?name="
 

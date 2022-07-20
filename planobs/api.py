@@ -5,7 +5,7 @@
 # License: BSD-3-Clause
 
 import os, time, logging
-from typing import Union
+from typing import Union, List
 
 from penquins import Kowalski
 
@@ -84,7 +84,7 @@ class Queue:
         filter_id: list,
         request_id: int = 1,
         subprogram_name: str = "ToO_Neutrino",
-        exposure_time: int = [30],
+        exposure_time: List[int] = [30],
         validity_window_end_mjd: float = None,
         program_id: int = 2,
         program_pi: str = "Kulkarni",
@@ -130,11 +130,12 @@ class Queue:
         }
         self.queue.update(trigger)
 
-    def submit_queue(self) -> None:
+    def submit_queue(self) -> List[dict]:
         """
         Submit the queue of triggers via the Kowalski API
         """
-        results = []
+        results: List[dict] = []
+
         for i, trigger in self.queue.items():
             res = self.kowalski.api(
                 method="put", endpoint="/api/triggers/ztf", data=trigger
@@ -144,6 +145,8 @@ class Queue:
             if res["status"] != "success":
                 err = "something went wrong with submitting."
                 raise APIError(err)
+
+            results.append(res)
 
         logger.info(f"Submitted {len(self.queue)} triggers to Kowalski.")
 
