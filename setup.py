@@ -16,7 +16,7 @@ setuptools.setup(
     url="https://github.com/simeonreusch/planobs",
     packages=setuptools.find_packages(),
     classifiers=[
-        "License :: OSI Approved :: BSD (3-clause)",
+        "License :: OSI Approved :: BSD License",
         "Operating System :: OS Independent",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.10",
