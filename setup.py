@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="planobs",
-    version="0.4.3",
+    version="0.4.4",
     author="Simeon Reusch",
     author_email="simeon.reusch@desy.de",
     description="Plan observations with the Zwicky Transient Facility",
@@ -31,18 +31,14 @@ setuptools.setup(
     install_requires=[
         "astroplan>=0.7",
         "astropy",
-        "astroquery",
         "coveralls",
-        "flask",
         "geopandas",
-        "html5lib",
-        "lxml",
         "pandas",
         "penquins",
         "matplotlib",
-        "numpy",
         "shapely",
         "tqdm",
         "ztfquery",
     ],
+    extras_require={"full": ["flask", "slack", "slackeventsapi"]},
 )

@@ -1,0 +1,13 @@
+astroplan
+astropy
+flask
+geopandas
+matplotlib
+pandas
+penquins
+setuptools
+shapely
+slackclient
+slackeventsapi
+tqdm
+ztfquery
