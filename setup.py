@@ -35,6 +35,7 @@ setuptools.setup(
         "geopandas",
         "pandas",
         "penquins",
+        "lxml",
         "matplotlib",
         "shapely",
         "tqdm",

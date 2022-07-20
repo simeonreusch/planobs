@@ -2,6 +2,7 @@ astroplan
 astropy
 flask
 geopandas
+lxml
 matplotlib
 pandas
 penquins
