@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="nuztf",
+    name="planobs",
     version="0.4.3",
     author="Simeon Reusch",
     author_email="simeon.reusch@desy.de",
