@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="nuztf",
-    version="0.4.2",
+    version="0.4.3",
     author="Simeon Reusch",
     author_email="simeon.reusch@desy.de",
     description="Plan observations with the Zwicky Transient Facility",
