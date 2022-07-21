@@ -49,7 +49,7 @@ jobs:
         run: |
           poetry install --extras "slack"
 
-      # Runs a set of commands using the runners shell
+      # Runs all tests in the 'tests' directory and gets coverage
       - name: Test the code
         env:
           KOWALSKI_HOST: ${{ secrets.kowalski_host }}
@@ -62,6 +62,7 @@ jobs:
         run: |
           poetry run coverage run -m unittest discover tests/
 
+      # Push the coverage result to coveralls.io
       - name: Run Coveralls
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -71,26 +72,10 @@ jobs:
       - name: Echo tag name
         run: echo "Tag is ${{ github.ref }}, Tagged is ${{ startsWith(github.ref, 'refs/tags/')}}, Python Check is ${{matrix.python-version == 3.10}},  Deploy is ${{ startsWith(github.ref, 'refs/tags/') && matrix.python-version == 3.10}}"
 
+      # Build a tarball and push to Pypi if tagged with new version
       - name: Build and publish
         if: ${{ startsWith(github.ref, 'refs/tags/') && success() && matrix.python-version == 3.10}}
         run: |
           poetry publish -n --build
         env:
           POETRY_PYPI_TOKEN_PYPI: ${{ secrets.PYPI_API_TOKEN }}
-          
-      # - name: Build a binary wheel and a source tarball
-      #   run: >-
-      #     python -m
-      #     build
-      #     --sdist
-      #     --wheel
-      #     --outdir dist/
-      #     .
-
-      # - name: Publish distribution 📦 to PyPI
-      #   if: ${{ startsWith(github.ref, 'refs/tags/') && success() && matrix.python-version == 3.10}}
-      #   uses: pypa/gh-action-pypi-publish@release/v1
-      #   with:
-      #     user: __token__
-      #     password: ${{ secrets.PYPI_API_TOKEN }}
-
