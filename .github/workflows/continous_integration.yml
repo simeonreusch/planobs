@@ -60,7 +60,7 @@ jobs:
           FRITZ_TOKEN: ${{ secrets.fritz_token }}
           ZTFDATA: ./
         run: |
-          poetry run coverage run -m unittest discover tests/
+          poetry run coverage run -m pytest -v 
 
       # Push the coverage result to coveralls.io
       - name: Run Coveralls
