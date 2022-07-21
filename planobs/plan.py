@@ -69,78 +69,124 @@ class PlanObservation:
         self.search_full_archive = False
         self.coverage = None
         self.recommended_field = None
-        # self.summary: dict = {}
 
         if ra is None and self.alertsource in icecube:
             if verbose:
                 logger.info("Parsing an IceCube alert")
 
-            # Check if request is archival:
-            archive, latest_archive_no = gcn_parser.get_gcn_circulars_archive()
+            gcn_nr = gcn_parser.find_gcn_circular(neutrino_name=self.name)
 
-            # Check if the alert is younger than latest archive entry
-            archival_names = [entry[0] for entry in archive]
-            archival_dates = [int(entry[2:-1]) for entry in archival_names]
-            latest_archival = max(archival_dates)
-            this_alert_date = int(self.name[2:-1])
-            if this_alert_date > latest_archival:
-                logger.info(
-                    "Alert too new, no GCN circular available yet. Using latest GCN notice"
-                )
-            else:
-                logger.info("Alert info should be in GCN circular archive")
-                self.search_full_archive = True
+            if gcn_nr:
 
-            if self.search_full_archive:
-                self.search_match_in_archive(archive)
-
-                # Well, if it's not in the latest archive, use the full
-                # backwards search
-                while self.found_in_archive is False:
-                    archive, _ = gcn_parser.get_gcn_circulars_archive(latest_archive_no)
-                    self.search_match_in_archive(archive)
-                    latest_archive_no -= 1
-
-            if self.found_in_archive:
-                gcn_info = gcn_parser.parse_gcn_circular(self.gcn_nr)
+                logger.info(f"Found a GCN, number is {gcn_nr}")
+                gcn_info = gcn_parser.parse_gcn_circular(gcn_nr)
                 self.ra = gcn_info["ra"]
                 self.ra_err = gcn_info["ra_err"]
                 self.dec = gcn_info["dec"]
                 self.dec_err = gcn_info["dec_err"]
                 self.arrivaltime = gcn_info["time"]
+                self.datasource = f"GCN Circular {gcn_nr}\n"
 
             else:
-                logger.info("No archival GCN circular found. Using newest notice!")
 
-                (
-                    ra_notice,
-                    dec_notice,
-                    self.arrivaltime,
-                    revision,
-                ) = gcn_parser.parse_latest_gcn_notice()
-                gcn_nr_latest = archive[0][1]
-                gcn_info = gcn_parser.parse_gcn_circular(gcn_nr_latest)
-                ra_circ = gcn_info["ra"]
-                ra_err_circ = gcn_info["ra_err"]
-                dec_circ = gcn_info["dec"]
-                dec_err_circ = gcn_info["dec_err"]
-                coords_notice = SkyCoord(
-                    ra_notice * u.deg, dec_notice * u.deg, frame="icrs"
+                logger.info("Found no GCN")
+                latest_gcn_time = gcn_parser.get_time_of_latest_gcn_circular()
+                this_alert_date = int(
+                    Time(
+                        f"20{self.name[2:4]}-{self.name[4:6]}-{self.name[6:8]}",
+                        format="iso",
+                    ).mjd
                 )
-                coords_circular = SkyCoord(
-                    ra_circ * u.deg, dec_circ * u.deg, frame="icrs"
-                )
-                separation = coords_notice.separation(coords_circular).deg
-                if separation < 1:
-                    self.ra = ra_circ
-                    self.dec = dec_circ
-                    self.ra_err = ra_err_circ
-                    self.dec_err = dec_err_circ
-                    self.datasource = f"GCN Circular {gcn_nr_latest}\n"
+                if this_alert_date >= int(latest_gcn_time):
+                    logger.info(
+                        "The IceCube alert is from the same day as the latest GCN circular, there is probably no GCN circular available yet. Using latest GCN notice"
+                    )
+
                 else:
-                    self.ra = ra_notice
-                    self.dec = dec_notice
-                    self.datasource = f"GCN Notice (Rev. {revision})\n"
+                    raise ValueError(
+                        "Alert is neither too new, nor in the archive. You probably made a mistake when entering the IceCube name."
+                    )
+
+            # quit()
+
+            # # Check if request is archival:
+            # archive, latest_archive_no = gcn_parser.get_gcn_circulars_archive()
+
+            # # Check if the alert is younger than latest archive entry
+            # archival_names = [entry[0] for entry in archive]
+            # archival_dates = [int(entry[2:-1]) for entry in archival_names]
+            # latest_archival = max(archival_dates)
+            # this_alert_date = int(self.name[2:-1])
+            # print(this_alert_date)
+            # if this_alert_date > latest_archival:
+            #     logger.info(
+            #         "Alert too new, no GCN circular available yet. Using latest GCN notice"
+            #     )
+
+            #     (
+            #         ra_notice,
+            #         dec_notice,
+            #         self.arrivaltime,
+            #         revision,
+            #     ) = gcn_parser.parse_latest_gcn_notice()
+
+            # else:
+            #     logger.info("Alert info should be in GCN circular archive")
+            #     self.search_full_archive = True
+
+            # if self.search_full_archive:
+            #     self.search_match_in_archive(archive)
+
+            #     # Well, if it's not in the latest archive, use the full
+            #     # backwards search
+            #     while self.found_in_archive is False:
+            #         archive, _ = gcn_parser.get_gcn_circulars_archive(latest_archive_no)
+            #         self.search_match_in_archive(archive)
+            #         latest_archive_no -= 1
+
+            # if self.found_in_archive:
+            #     gcn_info = gcn_parser.parse_gcn_circular(self.gcn_nr)
+            #     self.ra = gcn_info["ra"]
+            #     self.ra_err = gcn_info["ra_err"]
+            #     self.dec = gcn_info["dec"]
+            #     self.dec_err = gcn_info["dec_err"]
+            #     self.arrivaltime = gcn_info["time"]
+
+            # else:
+            #     logger.info("No archival GCN circular found. Using newest notice!")
+
+            #     (
+            #         self.ra,
+            #         self.dec,
+            #         self.arrivaltime,
+            #         revision,
+            #     ) = gcn_parser.parse_latest_gcn_notice()
+
+            #     self.datasource = f"GCN Notice (Rev. {revision})\n"
+
+            #     gcn_nr_latest = archive[0][1]
+            #     gcn_info = gcn_parser.parse_gcn_circular(gcn_nr_latest)
+            #     ra_circ = gcn_info["ra"]
+            #     ra_err_circ = gcn_info["ra_err"]
+            #     dec_circ = gcn_info["dec"]
+            #     dec_err_circ = gcn_info["dec_err"]
+            #     coords_notice = SkyCoord(
+            #         ra_notice * u.deg, dec_notice * u.deg, frame="icrs"
+            #     )
+            #     coords_circular = SkyCoord(
+            #         ra_circ * u.deg, dec_circ * u.deg, frame="icrs"
+            #     )
+            #     separation = coords_notice.separation(coords_circular).deg
+            #     if separation < 1:
+            #         self.ra = ra_circ
+            #         self.dec = dec_circ
+            #         self.ra_err = ra_err_circ
+            #         self.dec_err = dec_err_circ
+            #         self.datasource = f"GCN Circular {gcn_nr_latest}\n"
+            #     else:
+            #         self.ra = ra_notice
+            #         self.dec = dec_notice
+            #         self.datasource = f"GCN Notice (Rev. {revision})\n"
 
         elif ra is None and self.alertsource in ztf:
             if utils.is_ztf_name(name):

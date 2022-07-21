@@ -1,9 +1,14 @@
 #!/usr/bin/env python3
+import logging
 import matplotlib.pyplot as plt
 
 from planobs.plan import PlanObservation
 from planobs.multiday_plan import MultiDayObservation
 from planobs.api import Queue
+
+logging.basicConfig()
+logging.getLogger("planobs.plan").setLevel(logging.INFO)
+logging.getLogger("planobs.gcn_parser").setLevel(logging.INFO)
 
 name = "IC220624A"  # Name of the alert object
 # name = "IC201007A"

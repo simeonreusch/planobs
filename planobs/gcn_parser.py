@@ -3,7 +3,7 @@
 # GCN parsing code partially by Robert Stein (robert.stein@desy.de)
 # License: BSD-3-Clause
 
-import os, time, re, logging
+import os, time, re, logging, json
 import numpy as np
 import pandas as pd  # type: ignore
 from astropy.time import Time  # type: ignore
@@ -13,37 +13,98 @@ from typing import Tuple, Optional
 logger = logging.getLogger(__name__)
 
 
-def get_gcn_circulars_archive(archive_no=None):
-    if archive_no is None:
-        response = requests.get("https://gcn.gsfc.nasa.gov/gcn3_archive.html")
-    else:
-        response = requests.get(
-            f"https://gcn.gsfc.nasa.gov/gcn3_arch_old{archive_no}.html"
+def find_gcn_circular(neutrino_name: str):
+    """
+    Trick the webpage into giving us results
+    """
+    endpoint = (
+        "https://heasarc.gsfc.nasa.gov/wsgi-scripts/tach/gcn_v2/tach.wsgi/graphql_fast"
+    )
+
+    querystr = (
+        '{ allEventCard( name: "'
+        + neutrino_name
+        + '" ) {edges {node { id_ event } } } }'
+    )
+    r = requests.post(
+        endpoint,
+        data={
+            "query": querystr,
+            "Content-Type": "application/json",
+        },
+    )
+    res = json.loads(r.text)
+
+    if res["data"]["allEventCard"]["edges"]:
+
+        event_id = res["data"]["allEventCard"]["edges"][0]["node"]["id_"]
+
+        querystr = (
+            "{ allCirculars ( evtid:"
+            + event_id
+            + " ) { totalCount edges { node { id id_ received subject evtidCircular{ event } cid evtid oidCircular{ telescope detector oidEvent{ wavelength messenger } } } } } }"
         )
 
-    gcns = []
-    _archive_numbers = []
-    for line in response.text.splitlines():
-        if "IceCube observation of a high-energy neutrino" in line:
-            res = line.split(">")
-            gcn_no = "".join([x for x in res[2] if x.isdigit()])
-            long_name = re.findall(
-                r"(IceCube-[12][0-9][0-9][0-9][0-3][0-9][A-Z])", line
-            )[0]
-            short_name = "IC" + long_name[8:]
-            gcns.append((short_name, gcn_no))
-        elif "gcn3_arch_old" in line:
-            url = line.split('"')[1]
-            _archive_no = int(url[13:].split(".")[0])
-            _archive_numbers.append(_archive_no)
+        r = requests.post(
+            endpoint,
+            data={
+                "query": querystr,
+                "Content-Type": "application/json",
+            },
+        )
+        result = json.loads(r.text)
 
-    if archive_no is not None:
-        logger.info(f"Processed archive number {archive_no}")
+        received_date = []
+        circular_nr = []
 
-    return gcns, max(_archive_numbers)
+        for entry in result["data"]["allCirculars"]["edges"]:
+            received_date.append(entry["node"]["received"])
+            circular_nr.append(entry["node"]["cid"])
+
+        """
+        I don't trust this webserver, let's go with the
+        earliest GCN, not the last in the list
+        """
+        earliest_gcn_nr = circular_nr[
+            np.argmin([Time(i, format="isot").mjd for i in received_date])
+        ]
+        return earliest_gcn_nr
+
+    else:
+        return None
 
 
-def parse_gcn_circular(gcn_number):
+def get_time_of_latest_gcn_circular():
+    """
+    Check when the latest circular was posted
+    """
+    endpoint = (
+        "https://heasarc.gsfc.nasa.gov/wsgi-scripts/tach/gcn_v2/tach.wsgi/graphql_fast"
+    )
+    querystr = '{ allCirculars ( first:50after:"" ) { totalCount pageInfo{ hasNextPage hasPreviousPage startCursor endCursor } edges { node { id id_ received subject evtidCircular{ event } cid evtid oidCircular{ telescope detector oidEvent{ wavelength messenger } } } } } }'
+
+    r = requests.post(
+        endpoint,
+        data={
+            "query": querystr,
+            "Content-Type": "application/json",
+        },
+    )
+    result = json.loads(r.text)
+
+    received_date = []
+
+    for entry in result["data"]["allCirculars"]["edges"]:
+        received_date.append(entry["node"]["received"])
+
+    latest_date_mjd = np.max([Time(i, format="isot").mjd for i in received_date])
+
+    logger.info(f"Most recent GCN is from {Time(latest_date_mjd, format='mjd').iso}")
+
+    return latest_date_mjd
+
+
+def parse_gcn_circular(gcn_number: int):
     url = f"https://gcn.gsfc.nasa.gov/gcn3/{gcn_number}.gcn3"
     response = requests.get(url)
     returndict = {}
