@@ -13,6 +13,7 @@ classifiers = [
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.10",
 ]
+keywords = ["astroparticle physics", "science", "multimessenger astronomy", "ZTF"]
 
 [tool.poetry.dependencies]
 cligj = "^0.7.2"
