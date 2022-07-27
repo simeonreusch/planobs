@@ -2,7 +2,7 @@
 # Author: Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 
 from planobs.plan import PlanObservation, AirmassError, ParsingError
 from planobs.utils import is_ztf_name
@@ -37,7 +37,7 @@ class Slackbot:
         self.coverage = None
 
     # Craft and return the entire message payload as a dictionary.
-    def create_plot(self):
+    def create_plot(self) -> None:
         try:
             plan = PlanObservation(
                 name=self.name,

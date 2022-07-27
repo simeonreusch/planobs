@@ -2,6 +2,8 @@
 import matplotlib.pyplot as plt  # type: ignore
 import os, logging
 from datetime import datetime, date
+from typing import List, Optional
+import astropy  # type: ignore
 from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
 from tqdm import tqdm  # type: ignore
 from astropy.time import Time  # type: ignore
@@ -64,11 +66,11 @@ class MultiDayObservation:
         ra = plan_initial.ra
         dec = plan_initial.dec
 
-        observable = []
-        g_band_start = []
-        g_band_end = []
-        r_band_start = []
-        r_band_end = []
+        observable: List[Optional[bool]] = []
+        g_band_start: List[Optional[astropy.time.core.Time]] = []
+        g_band_end: List[Optional[astropy.time.core.Time]] = []
+        r_band_start: List[Optional[astropy.time.core.Time]] = []
+        r_band_end: List[Optional[astropy.time.core.Time]] = []
 
         plan_initial.request_ztf_fields()
 

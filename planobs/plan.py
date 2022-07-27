@@ -37,8 +37,8 @@ class PlanObservation:
     def __init__(
         self,
         name: str,
-        ra: float = None,
-        dec: float = None,
+        ra: Optional[float] = None,
+        dec: Optional[float] = None,
         arrivaltime: str = None,
         date: str = None,
         max_airmass=2.0,
@@ -59,8 +59,10 @@ class PlanObservation:
         self.observationlength = observationlength
         self.bands = bands
         self.multiday = multiday
+        self.ra: Optional[float] = None
+        self.dec: Optional[float] = None
         self.ra_err: Optional[list] = None
-        self.dec_err = None
+        self.dec_err: Optional[list] = None
         self.warning = None
         self.observable = True
         self.rejection_reason = None
@@ -277,9 +279,8 @@ class PlanObservation:
         else:
             summarytext = f"Name = {self.name}\n"
 
-        if self.ra_err:
-            if self.ra_err[0]:
-                summarytext += f"RA = {self.coordinates.ra.deg} + {self.ra_err[0]} - {self.ra_err[1]*-1}\nDec = {self.coordinates.dec.deg} + {self.dec_err[0]} - {self.dec_err[1]*-1}\n"
+        if self.ra_err is not None and self.dec_err is not None:
+            summarytext += f"RA = {self.coordinates.ra.deg} + {self.ra_err[0]} - {self.ra_err[1]*-1.0}\nDec = {self.coordinates.dec.deg} + {self.dec_err[0]} - {self.dec_err[1]*-1.0}\n"
         else:
             summarytext += f"RADEC = {self.coordinates.ra.deg:.8f} {self.coordinates.dec.deg:.8f}\n"
 

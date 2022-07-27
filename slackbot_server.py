@@ -3,15 +3,14 @@
 # License: BSD-3-Clause
 
 import os, datetime, logging
-from astropy.time import Time
-from astropy import units as u
+from astropy.time import Time  # type: ignore
+from astropy import units as u  # type: ignore
 
-from datetime import datetime
 from flask import Flask
-from slack import WebClient
-from slackeventsapi import SlackEventAdapter
+from slack import WebClient  # type: ignore
+from slackeventsapi import SlackEventAdapter  # type: ignore
 from slackbot import Slackbot
-from astropy.coordinates import EarthLocation
+from astropy.coordinates import EarthLocation  # type: ignore
 from planobs.api import Queue
 
 app = Flask(__name__)
@@ -96,23 +95,25 @@ def do_obs_plan(
             )
 
 
-def get_submitted_too() -> list:
+def get_submitted_too() -> str:
     q = Queue(user="DESY")
-    existing_too_queue = q.get_too_queues(names_only=True)
+    existing_too_queue = q.get_too_queues_nameonly()
     message = ""
     for entry in existing_too_queue:
         message += f"{entry}\n"
     message = message[:-1]
+
     return message
 
 
-def get_submitted_full() -> list:
+def get_submitted_full() -> str:
     q = Queue(user="DESY")
-    existing_queue = q.get_all_queues(names_only=True)
+    existing_queue = q.get_all_queues_nameonly()
     message = ""
     for entry in existing_queue:
         message += f"{entry}\n"
     message = message[:-1]
+
     return message
 
 

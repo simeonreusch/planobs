@@ -5,9 +5,9 @@
 # License: BSD-3-Clause
 
 import os, time, logging
-from typing import Union, List
+from typing import Union, List, Optional
 
-from penquins import Kowalski
+from penquins import Kowalski  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class Queue:
         self.protocol: str = "https"
         self.host: str = os.environ.get("KOWALSKI_HOST", default="localhost")
         self.port: int = 443
-        self.api_token: str = os.environ.get("KOWALSKI_API_TOKEN")
+        self.api_token: Optional[str] = os.environ.get("KOWALSKI_API_TOKEN")
 
         self.queue: dict = {}
 
@@ -48,7 +48,7 @@ class Queue:
             err = f"Ping of Kowalski with specified token failed. Are you sure this token is correct? Provided token: {self.api_token}"
             raise APIError(err)
 
-    def get_all_queues(self, names_only: bool = False) -> Union[list, dict]:
+    def get_all_queues(self, names_only: bool = False) -> dict:
         """
         Get all the queues
         """
@@ -58,23 +58,43 @@ class Queue:
             err = f"API call failed with status '{res['status']}'' and message '{res['message']}''"
             raise APIError(err)
 
-        if names_only:
-            res = [x["queue_name"] for x in res["data"]]
-
         return res
 
-    def get_too_queues(self, names_only: bool = False) -> Union[list, dict]:
+    def get_all_queues_nameonly(self) -> list:
+        """
+        Get the names of all queues
+        """
+        res = self.kowalski.api("get", "/api/triggers/ztf")
+        logger.debug(res)
+        if res["status"] != "success":
+            err = f"API call failed with status '{res['status']}'' and message '{res['message']}''"
+            raise APIError(err)
+
+        res = [x["queue_name"] for x in res["data"]]
+        return res
+
+    def get_too_queues(self, names_only: bool = False) -> dict:
         """
         Get all the queues and return ToO triggers only
         """
         res = self.get_all_queues()
         logger.debug(res)
-        res["data"] = [x for x in res["data"] if x["is_TOO"]]
 
-        if names_only:
-            res = [x["queue_name"] for x in res["data"]]
+        resultdict = {}
+        resultdict["data"] = [x for x in res["data"] if x["is_TOO"]]
 
-        return res
+        return resultdict
+
+    def get_too_queues_nameonly(self) -> list:
+        """
+        Get all the queues, return names of ToO triggers only
+        """
+        res = self.get_all_queues()
+        logger.debug(res)
+
+        resultlist = [x["queue_name"] for x in res["data"]]
+
+        return resultlist
 
     def add_trigger_to_queue(
         self,
@@ -84,7 +104,7 @@ class Queue:
         filter_id: list,
         request_id: int = 1,
         subprogram_name: str = "ToO_Neutrino",
-        exposure_time: List[int] = [30],
+        exposure_time: int = 30,
         validity_window_end_mjd: float = None,
         program_id: int = 2,
         program_pi: str = "Kulkarni",

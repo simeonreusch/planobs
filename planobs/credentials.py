@@ -4,7 +4,7 @@
 import os
 import warnings
 import logging
-from ztfquery import io
+from ztfquery import io  # type: ignore
 
 # Manage ztfquery logins from environment variables
 
