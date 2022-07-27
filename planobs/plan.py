@@ -74,6 +74,9 @@ class PlanObservation:
             if verbose:
                 logger.info("Parsing an IceCube alert")
 
+            # check if name is correct
+            assert utils.is_icecube_name(self.name)
+
             gcn_nr = gcn_parser.find_gcn_circular(neutrino_name=self.name)
 
             if gcn_nr:
