@@ -48,7 +48,7 @@ class Queue:
             err = f"Ping of Kowalski with specified token failed. Are you sure this token is correct? Provided token: {self.api_token}"
             raise APIError(err)
 
-    def get_all_queues(self, names_only: bool = False) -> dict:
+    def get_all_queues(self) -> dict:
         """
         Get all the queues
         """
@@ -73,7 +73,7 @@ class Queue:
         res = [x["queue_name"] for x in res["data"]]
         return res
 
-    def get_too_queues(self, names_only: bool = False) -> dict:
+    def get_too_queues(self) -> dict:
         """
         Get all the queues and return ToO triggers only
         """
