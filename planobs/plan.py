@@ -59,7 +59,7 @@ class PlanObservation:
         self.observationlength = observationlength
         self.bands = bands
         self.multiday = multiday
-        self.ra_err = None
+        self.ra_err: Optional[list] = None
         self.dec_err = None
         self.warning = None
         self.observable = True

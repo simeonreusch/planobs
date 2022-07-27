@@ -8,7 +8,7 @@ import numpy as np
 import pandas as pd  # type: ignore
 from astropy.time import Time  # type: ignore
 import requests
-from typing import Tuple, Optional
+from typing import Tuple, Optional, List, TypedDict
 
 logger = logging.getLogger(__name__)
 
@@ -104,21 +104,34 @@ def get_time_of_latest_gcn_circular():
     return latest_date_mjd
 
 
-def parse_gcn_circular(gcn_number: int):
+class GCN_Info(TypedDict):
+    name: str
+    author: str
+    time: Time
+    ra: float
+    ra_err: List[Optional[float]]
+    dec: float
+    dec_err: List[Optional[float]]
+
+
+def parse_gcn_circular(gcn_number: int) -> GCN_Info:
+    """
+    Parses the handwritten text of a given GCN;
+    extracts author, time and RA/Dec (with errors)
+    """
     url = f"https://gcn.gsfc.nasa.gov/gcn3/{gcn_number}.gcn3"
+
     response = requests.get(url)
-    returndict = {}
     mainbody_starts_here = 999
     splittext = response.text.splitlines()
     splittext = list(filter(None, splittext))
+
     for i, line in enumerate(splittext):
         if "SUBJECT" in line:
             name = line.split(" - ")[0].split(": ")[1]
-            returndict.update({"name": name})
         elif "FROM" in line:
             base = line.split("at")[0].split(": ")[1].split(" ")
             author = [x for x in base if x != ""][1]
-            returndict.update({"author": author})
         elif (
             ("RA" in line or "Ra" in line)
             and ("DEC" in splittext[i + 1] or "Dec" in splittext[i + 1])
@@ -126,6 +139,10 @@ def parse_gcn_circular(gcn_number: int):
         ):
             ra, ra_upper, ra_lower = parse_radec(searchstring=line)
             dec, dec_upper, dec_lower = parse_radec(searchstring=splittext[i + 1])
+
+            ra_err: List[Optional[float]]
+            dec_err: List[Optional[float]]
+
             if ra_upper and ra_lower:
                 ra_err = [ra_upper, -ra_lower]
             else:
@@ -135,9 +152,7 @@ def parse_gcn_circular(gcn_number: int):
                 dec_err = [dec_upper, -dec_lower]
             else:
                 dec_err = [None, None]
-            returndict.update(
-                {"ra": ra, "ra_err": ra_err, "dec": dec, "dec_err": dec_err}
-            )
+
             mainbody_starts_here = i + 2
         elif ("Time" in line or "TIME" in line) and i < mainbody_starts_here:
             raw_time = [
@@ -149,12 +164,20 @@ def parse_gcn_circular(gcn_number: int):
             raw_date = name.split("-")[1][:6]
             ut_time = f"20{raw_date[0:2]}-{raw_date[2:4]}-{raw_date[4:6]}T{raw_time}"
             time = Time(ut_time, format="isot", scale="utc")
-            returndict.update({"time": time})
 
-    return returndict
+    gcn_info = GCN_Info(
+        name=name,
+        author=author,
+        time=time,
+        ra=ra,
+        ra_err=ra_err,
+        dec=dec,
+        dec_err=dec_err,
+    )
+
+    return gcn_info
 
 
-# The typing does not work here
 def parse_radec(searchstring: str) -> Tuple[float, Optional[float], Optional[float]]:
     """ """
     regex_findall = re.findall(r"[-+]?\d*\.\d+|\d+", searchstring)
