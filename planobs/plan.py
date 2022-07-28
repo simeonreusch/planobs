@@ -32,6 +32,9 @@ logger = logging.getLogger(__name__)
 class PlanObservation:
     """
     Class for planning observations
+
+    :param name: Name of the object for which follow-up is planned (IceCube or ZTF identifiers are supported)
+    :param ra: RA of the object
     """
 
     def __init__(
