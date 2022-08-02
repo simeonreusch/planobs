@@ -103,7 +103,7 @@ python-versions = "*"
 click = ">=4.0"
 
 [package.extras]
-dev = ["pytest (>=3.6)", "pytest-cov", "wheel", "coveralls"]
+dev = ["coveralls", "wheel", "pytest-cov", "pytest (>=3.6)"]
 
 [[package]]
 name = "cligj"
@@ -195,7 +195,7 @@ test = ["pytest (>=3)", "pytest-cov", "boto3 (>=1.2.4)", "mock"]
 
 [[package]]
 name = "flask"
-version = "2.1.3"
+version = "2.2.0"
 description = "A simple framework for building complex web applications."
 category = "main"
 optional = false
@@ -206,11 +206,11 @@ click = ">=8.0"
 importlib-metadata = {version = ">=3.6.0", markers = "python_version < \"3.10\""}
 itsdangerous = ">=2.0"
 Jinja2 = ">=3.0"
-Werkzeug = ">=2.0"
+Werkzeug = ">=2.2.0"
 
 [package.extras]
-async = ["asgiref (>=3.2)"]
 dotenv = ["python-dotenv"]
+async = ["asgiref (>=3.2)"]
 
 [[package]]
 name = "fonttools"
@@ -442,8 +442,8 @@ optional = false
 python-versions = ">=3.6"
 
 [package.extras]
-dev = ["pre-commit", "tox"]
-testing = ["pytest", "pytest-benchmark"]
+testing = ["pytest-benchmark", "pytest"]
+dev = ["tox", "pre-commit"]
 
 [[package]]
 name = "py"
@@ -853,8 +853,8 @@ fiona = [
     {file = "Fiona-1.8.21.tar.gz", hash = "sha256:3a0edca2a7a070db405d71187214a43d2333a57b4097544a3fcc282066a58bfc"},
 ]
 flask = [
-    {file = "Flask-2.1.3-py3-none-any.whl", hash = "sha256:9013281a7402ad527f8fd56375164f3aa021ecfaff89bfe3825346c24f87e04c"},
-    {file = "Flask-2.1.3.tar.gz", hash = "sha256:15972e5017df0575c3d6c090ba168b6db90259e620ac8d7ea813a396bad5b6cb"},
+    {file = "Flask-2.2.0-py3-none-any.whl", hash = "sha256:10dc2bae7a9b6ab59111d6dbece2e08fb0015d2e88d296c40323cc0c7aac2c2e"},
+    {file = "Flask-2.2.0.tar.gz", hash = "sha256:98b33b13ad76ee9c7a80d2f56a6c578780e55bf8281790c62d50d4b7fadec2b8"},
 ]
 fonttools = [
     {file = "fonttools-4.34.4-py3-none-any.whl", hash = "sha256:d73f25b283cd8033367451122aa868a23de0734757a01984e4b30b18b9050c72"},
@@ -1316,6 +1316,7 @@ pyparsing = [
 ]
 pyproj = [
     {file = "pyproj-3.3.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:473961faef7a9fd723c5d432f65220ea6ab3854e606bf84b4d409a75a4261c78"},
+    {file = "pyproj-3.3.1-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:07c9d8d7ec009bbac09e233cfc725601586fe06880e5538a3a44eaf560ba3a62"},
     {file = "pyproj-3.3.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:2fef9c1e339f25c57f6ae0558b5ab1bbdf7994529a30d8d7504fc6302ea51c03"},
     {file = "pyproj-3.3.1-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:140fa649fedd04f680a39f8ad339799a55cb1c49f6a84e1b32b97e49646647aa"},
     {file = "pyproj-3.3.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:b59c08aea13ee428cf8a919212d55c036cc94784805ed77c8f31a4d1f541058c"},
@@ -1328,6 +1329,7 @@ pyproj = [
     {file = "pyproj-3.3.1-cp38-cp38-win32.whl", hash = "sha256:c99f7b5757a28040a2dd4a28c9805fdf13eef79a796f4a566ab5cb362d10630d"},
     {file = "pyproj-3.3.1-cp38-cp38-win_amd64.whl", hash = "sha256:5dac03d4338a4c8bd0f69144c527474f517b4cbd7d2d8c532cd8937799723248"},
     {file = "pyproj-3.3.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:56b0f9ee2c5b2520b18db30a393a7b86130cf527ddbb8c96e7f3c837474a9d79"},
+    {file = "pyproj-3.3.1-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:f1032e5dfb50eae06382bcc7b9011b994f7104d932fe91bd83a722275e30e8ce"},
     {file = "pyproj-3.3.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5f92d8f6514516124abb714dce912b20867831162cfff9fae2678ef07b6fcf0f"},
     {file = "pyproj-3.3.1-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:1ef1bfbe2dcc558c7a98e2f1836abdcd630390f3160724a6f4f5c818b2be0ad5"},
     {file = "pyproj-3.3.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5ca5f32b56210429b367ca4f9a57ffe67975c487af82e179a24370879a3daf68"},
