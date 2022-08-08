@@ -10,7 +10,7 @@ from planobs import credentials
 from planobs.plan import PlanObservation
 from planobs.multiday_plan import MultiDayObservation
 from planobs.api import Queue, APIError
-from planobs.gcn_parser import parse_latest_gcn_notice
+from planobs import gcn_parser
 
 
 class TestPlan(unittest.TestCase):
@@ -25,7 +25,7 @@ class TestPlan(unittest.TestCase):
 
         self.logger.info("\n\n Testing GCN parser \n\n")
 
-        latest = parse_latest_gcn_notice()
+        latest = gcn_parser.parse_latest_gcn_notice()
 
         self.logger.info(f"Length of latest GCN circular: {len(latest)}")
 
@@ -282,23 +282,44 @@ class TestPlan(unittest.TestCase):
         except APIError:
             self.logger.info("Queue was probably already empty")
 
+        # Now we submit our triggers
         q.submit_queue()
 
         time.sleep(5)
 
         current_too_queue = q.get_too_queues()
 
-        trigger_in_q_list = [
-            current_too_queue["data"][i]["queue_name"] for i in range(8)
-        ]
-        trigger_in_q_expected_list = [f"ToO_IC220501A_{i}" for i in range(8)]
+        self.logger.info(
+            f"Current Kowalski queue has {len(current_too_queue['data'])} entries (after submitting)"
+        )
 
+        kowalski_list = [
+            current_too_queue["data"][i]["queue_name"]
+            for i in range(len(current_too_queue["data"]))
+        ]
+        expected_list = [f"ToO_IC220501A_{i}" for i in range(8)]
+
+        # All triggers should be submitted
+        for t in expected_list:
+            self.assertIn(t, kowalski_list)
+
+        # Now we delete our triggers
         q.delete_queue()
 
         current_too_queue = q.get_too_queues()
 
-        for t in trigger_in_q_list:
-            self.assertIn(t, trigger_in_q_expected_list)
+        self.logger.info(
+            f"Current Kowalski queue has {len(current_too_queue['data'])} entries (after deleting)"
+        )
+
+        kowalski_list = [
+            current_too_queue["data"][i]["queue_name"]
+            for i in range(len(current_too_queue["data"]))
+        ]
+
+        # All triggers should be deleted
+        for t in expected_list:
+            self.assertNotIn(t, kowalski_list)
 
     def tearDown(self):
         names = [
