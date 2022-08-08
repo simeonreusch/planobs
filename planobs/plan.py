@@ -98,6 +98,7 @@ class PlanObservation:
             else:
 
                 logger.info("Found no GCN")
+
                 latest_gcn_time = gcn_parser.get_time_of_latest_gcn_circular()
                 this_alert_date = int(
                     Time(
@@ -109,6 +110,16 @@ class PlanObservation:
                     logger.info(
                         "The IceCube alert is from the same day as the latest GCN circular, there is probably no GCN circular available yet. Using latest GCN notice"
                     )
+                    (
+                        ra,
+                        dec,
+                        arrivaltime,
+                        revision,
+                    ) = gcn_parser.parse_latest_gcn_notice()
+                    self.ra = ra
+                    self.dec = dec
+                    self.arrivaltime = arrivaltime
+                    self.datasource = revision
 
                 else:
                     raise ValueError(
@@ -583,10 +594,11 @@ class PlanObservation:
             zq.load_metadata(kind="ref", sql_query=querystring)
             mt = zq.metatable
 
-        for f in mt.field.unique():
-            d = {k: k in mt["filtercode"].values for k in ["zg", "zr", "zi"]}
-            if d["zg"] == True and d["zr"] == True:
-                fieldids_ref.append(int(f))
+        if len(mt) > 0:
+            for f in mt.field.unique():
+                d = {k: k in mt["filtercode"].values for k in ["zg", "zr", "zi"]}
+                if d["zg"] == True and d["zr"] == True:
+                    fieldids_ref.append(int(f))
 
         logger.info(f"Fields that contain target: {fieldids}")
         logger.info(f"Of these have a reference: {fieldids_ref}")

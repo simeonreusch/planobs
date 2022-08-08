@@ -4,7 +4,7 @@
 
 import re, os, logging, itertools, time
 
-from typing import List
+from typing import List, Optional
 from io import StringIO
 
 import pandas as pd  # type: ignore
@@ -158,7 +158,7 @@ def get_all_references_from_ipac() -> None:
         )
 
 
-def get_references(fieldids: list) -> pd.DataFrame:
+def get_references(fieldids: list) -> Optional[pd.DataFrame]:
     """
     Return the reference dataframes for all fieldids passed
     """
@@ -169,9 +169,13 @@ def get_references(fieldids: list) -> pd.DataFrame:
 
     for fieldid in fieldids:
         infile = os.path.join(datadir, f"{fieldid}_references.csv")
-        df = pd.read_csv(infile, index_col=0)
-        df_list.append(df)
+        if os.path.isfile(infile):
+            df = pd.read_csv(infile, index_col=0)
+            df_list.append(df)
 
-    reference_df = pd.concat(df_list).reset_index(drop=True)
+    if df_list:
+        reference_df = pd.concat(df_list).reset_index(drop=True)
+    else:
+        reference_df = None
 
     return reference_df
