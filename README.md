@@ -16,7 +16,7 @@ planobs requires at least Python 3.8
 # Installation
 Using Pip: ```pip install planobs```.
 
-Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/planobs```. This also gives you access to the Slackbot.
+Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/planobs```, followed by ```poetry install``` This also gives you access to the Slackbot.
 
 # General usage
 ```python
@@ -43,25 +43,21 @@ from planobs.plan import PlanObservation
 
 name = "IC201007A" # Name of the alert object
 date = "2020-10-08" #This is optional, defaults to today
-# Now no ra and dec values are given, but alertsource 
-# is set to 'icecube'. This enables GCN archive parsing 
-# for the alert name. If it is not found, it will use 
-#the latest GCN notice (these are automated).
+
+# No RA and Dec values are given, because we set alertsource to icecube, which leads to automatic GCN parsing.
 
 plan = PlanObservation(name=name, date=date, alertsource="icecube")
-plan.plot_target() # Plots the observing conditions
-plan.request_ztf_fields() # Checks in which ZTF fields 
-# this object is observable and generates plots for them.
-print(plan.recommended_field) # In case there is an error in the
-# GCN, you will get the field with the most overlap here
+plan.plot_target() # Plots the observing conditions.
+plan.request_ztf_fields() # Checks which ZTF fields cover the target (and have references).
+print(plan.recommended_field) # This give you the field with the most overlap.
 ```
 ![](examples/figures/observation_plot_icecube.png)
 ![](examples/figures/grid_icecube.png)
 
 # Triggering ZTF
 
-`planobs` can be used for directly scheduling ToO observations with ZTF. 
-This is done through API calls to the `Kowalski` system, managed by the kowalski python manager [penquins](https://github.com/dmitryduev/penquins).
+`planobs` can be used to schedule ToO observations with ZTF. 
+This is done through API calls to the `Kowalski` system, managed by the Kowalski Python API [penquins](https://github.com/dmitryduev/penquins).
 
 To use this functionality, you must first configure the connection details. You need both an API token, and to know the address of the Kowalski host address. You can then set these as environment variables:
 
@@ -93,10 +89,7 @@ trigger_name = "ToO_IC220513A_test"
 # Instantiate the API connection
 q = Queue(user="yourname")
 
-# Add a trigger to the internal submission queue.
-# If not specified otherwise, validity_window_end_mjd
-# is computed from the exposure time
-
+# Add a trigger to the internal submission queue. Filter ID is 1 for r-, 2 for g- and 3 for i-band. Exposure time is given in seconds.
 q.add_trigger_to_queue(
     trigger_name=trigger_name,
     validity_window_start_mjd=59719.309333333334,
@@ -108,7 +101,6 @@ q.add_trigger_to_queue(
 q.submit_queue()
 
 # Now we verify that our trigger has been successfully submitted
-
 existing_too_requests = get_too_queues(names_only=True)
 print(existing_too_requests)
 assert trigger_name in existing_too_requests
@@ -127,7 +119,7 @@ res = q.delete_trigger(trigger_name=trigger_name)
 
 # Citing the code
 
-If you make use of this code, please cite it! A DOI is provided by Zenodo, which can reference both the code repository and specific releases:
+If you use this code, please cite it! A DOI is provided by Zenodo, which can reference both the code repository and specific releases:
 
 [![DOI](https://zenodo.org/badge/512753573.svg)](https://zenodo.org/badge/latestdoi/512753573)
 
