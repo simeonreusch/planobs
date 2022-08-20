@@ -12,7 +12,7 @@ from planobs.multiday_plan import MultiDayObservation
 from planobs.api import Queue, APIError
 from planobs import gcn_parser
 
-logging.getLogger("planobs.api.Queue").setLevel(logging.DEBUG)
+logging.getLogger("planobs.api").setLevel(logging.DEBUG)
 
 
 class TestPlan(unittest.TestCase):
