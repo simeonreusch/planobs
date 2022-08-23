@@ -191,6 +191,7 @@ def message(payload):
                     ["submit", "trigger", "Submit", "Trigger", "SUBMIT", "TRIGGER"]
                 ):
                     submit_trigger = True
+                    multiday = True
 
             if not radec_given:
                 if not multiday:

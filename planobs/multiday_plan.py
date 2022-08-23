@@ -5,6 +5,7 @@ from datetime import datetime, date
 from typing import List, Optional
 import astropy  # type: ignore
 from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
+import numpy as np
 from tqdm import tqdm  # type: ignore
 from astropy.time import Time  # type: ignore
 from astropy import units as u  # type: ignore
@@ -76,6 +77,9 @@ class MultiDayObservation:
 
         if plan_initial.ra_err:
             recommended_field = plan_initial.recommended_field
+        else:
+            recommended_field = np.min(plan_initial.fieldids_ref)
+            logger.warn("No error on RA/Dec available, choosing the primary grid field")
 
         pdf_outfile = os.path.join(name, f"{name}_multiday.pdf")
 
