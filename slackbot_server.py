@@ -23,6 +23,7 @@ slack_web_client = WebClient(token=os.environ.get("SLACK_TOKEN"))
 
 def do_obs_plan(
     channel,
+    ts,
     name,
     ra=None,
     dec=None,
@@ -347,6 +348,7 @@ def message(payload):
             if do_plan:
                 do_obs_plan(
                     channel=channel_id,
+                    ts=ts,
                     name=name,
                     ra=ra,
                     dec=dec,
