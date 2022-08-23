@@ -102,12 +102,18 @@ class Queue:
         """
         Get the ToO queues, return list of "name: date" for slackbot
         """
+        import numpy as np
+
         res = self.get_too_queues()
         returnlist = []
         for entry in res["data"]:
             name = entry["queue_name"]
-            date = Time(entry["validity_window_mjd"][0], format="mjd").iso
-            returnlist.append(f"{name}: {str(date)}")
+            date_mjd = Time(entry["validity_window_mjd"], format="mjd")
+            date_full = str(date_mjd[0].iso)
+            duration = date_mjd[1].value - date_mjd[0].value
+            obslength = int(np.round(duration * 86400))
+            date_short = date_full.split(".")[0]
+            returnlist.append(f"{name}: {date_short} ({obslength}s)")
 
         return returnlist
 
