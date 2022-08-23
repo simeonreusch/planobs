@@ -131,12 +131,50 @@ def fuzzy_parameters(param_list) -> list:
     return fuzzy_parameters
 
 
-def get_help_message() -> str:
+def get_help_message(user: str) -> str:
     """
     Get the help message to display all commands for the user
     """
-    message = f"Hi there. The available commands are *-ra*, *-dec*"
-    return message
+    blocks = [
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": f"Hi <@{user}>. This is a bot for planning observations. Just type *Plan IceCube-Name*, e.g. **Plan IC220822A*. Note: Everything display is UT.\n To interact with the current ZTF queue, use *Queue*, not *Plan*.\nOptional arguments available are:",
+            },
+            "fields": [
+                {
+                    "type": "mrkdwn",
+                    "text": "*-date*: Select the desired first day of observations. Format is YYYY-MM-DD",
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "*-tomorrow*: Select tomorrow as first day of observations",
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "*-multiday*: Obtains the full multiday observation schedule",
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "*-trigger*: Triggers the full multiday observation schedule",
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "*Queue -get*: Display the current target-of-opportunity ZTF queue",
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "*Queue -getfull*: Display the full current ZTF queue",
+                },
+                {
+                    "type": "mrkdwn",
+                    "text": "*Queue -delete TRIGGERNAME*: Delete the trigger TRIGGERNAME",
+                },
+            ],
+        }
+    ]
+    return blocks
 
 
 ts_old = []
@@ -164,10 +202,11 @@ def message(payload):
             channel_id = event.get("channel")
 
             if len(split_text) == 1:
-                message = get_help_message()
+                blocks = get_help_message(user)
                 slack_web_client.chat_postMessage(
                     channel=channel_id,
-                    text=message,
+                    text=" ",
+                    blocks=blocks,
                 )
                 return
 
@@ -218,10 +257,11 @@ def message(payload):
                     multiday = True
 
             if display_help:
-                message = get_help_message()
+                blocks = get_help_message()
                 slack_web_client.chat_postMessage(
                     channel=channel_id,
-                    text=message,
+                    text=" ",
+                    blocks=blocks,
                 )
                 return
 
