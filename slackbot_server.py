@@ -131,6 +131,14 @@ def fuzzy_parameters(param_list) -> list:
     return fuzzy_parameters
 
 
+def get_help_message() -> str:
+    """
+    Get the help message to display all commands for the user
+    """
+    message = f"Hi there. The available commands are *-ra*, *-dec*"
+    return message
+
+
 ts_old = []
 
 
@@ -150,6 +158,9 @@ def message(payload):
 
         if len(split_text) == 0:
             return
+
+        elif len(split_text) == 1:
+            message = get_help_message()
 
         elif split_text[0] == "Plan" or split_text[0] == "plan":
             do_plan = True
@@ -200,7 +211,7 @@ def message(payload):
                     multiday = True
 
             if display_help:
-                message = f"Hi there. The available commands are *-ra*, *-dec*"
+                message = get_help_message()
                 slack_web_client.chat_postMessage(
                     channel=channel_id,
                     text=message,
