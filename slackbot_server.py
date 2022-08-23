@@ -207,6 +207,7 @@ def message(payload):
                     channel=channel_id,
                     text=" ",
                     blocks=blocks,
+                    thread_ts=ts,
                 )
                 return
 
@@ -262,6 +263,7 @@ def message(payload):
                     channel=channel_id,
                     text=" ",
                     blocks=blocks,
+                    thread_ts=ts,
                 )
                 return
 
