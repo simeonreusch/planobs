@@ -50,16 +50,19 @@ def do_obs_plan(
     slack_web_client.chat_postMessage(
         channel=channel,
         text=slack_bot.summary,
+        thread_ts=ts,
     )
     if slack_bot.fields is not None:
         slack_web_client.chat_postMessage(
             channel=channel,
             text=f"Available fields: {slack_bot.fields}",
+            thread_ts=ts,
         )
     if slack_bot.recommended_field is not None:
         slack_web_client.chat_postMessage(
             channel=channel,
             text=f"Recommended field: {slack_bot.recommended_field} ({slack_bot.coverage[slack_bot.recommended_field]:.2f}% coverage)",
+            thread_ts=ts,
         )
 
     if slack_bot.summary != "Not observable due to airmass constraint" and not multiday:
@@ -70,7 +73,10 @@ def do_obs_plan(
             imgpath_plot = f"{name}/{name}_airmass_{site}.png"
         imgdata_plot = open(imgpath_plot, "rb")
         slack_web_client.files_upload(
-            file=imgdata_plot, filename=imgpath_plot, channels=channel
+            file=imgdata_plot,
+            filename=imgpath_plot,
+            channels=channel,
+            thread_ts=ts,
         )
 
     if slack_bot.summary != "Not observable due to airmass constraint":
@@ -80,18 +86,25 @@ def do_obs_plan(
                 imgpath = f"{name}/{name}_grid_{field}.png"
                 imgdata = open(imgpath, "rb")
                 slack_web_client.files_upload(
-                    file=imgdata, filename=imgpath, channels=channel
+                    file=imgdata,
+                    filename=imgpath,
+                    channels=channel,
+                    thread_ts=ts,
                 )
         if multiday:
             imgpath_plot = f"{name}/{name}_multiday.pdf"
             imgdata_plot = open(imgpath_plot, "rb")
             slack_web_client.files_upload(
-                file=imgdata_plot, filename=imgpath_plot, channels=channel
+                file=imgdata_plot,
+                filename=imgpath_plot,
+                channels=channel,
+                thread_ts=ts,
             )
 
             slack_web_client.chat_postMessage(
                 channel=channel,
                 text=slack_bot.multiday_summary,
+                thread_ts=ts,
             )
 
 
@@ -328,6 +341,7 @@ def message(payload):
             slack_web_client.chat_postMessage(
                 channel=channel_id,
                 text=message,
+                thread_ts=ts,
             )
 
             if do_plan:
@@ -357,6 +371,7 @@ def message(payload):
                     slack_web_client.chat_postMessage(
                         channel=channel_id,
                         text=message,
+                        thread_ts=ts,
                     )
 
             for i, parameter in enumerate(split_text):
@@ -366,6 +381,7 @@ def message(payload):
                     slack_web_client.chat_postMessage(
                         channel=channel_id,
                         text=message,
+                        thread_ts=ts,
                     )
 
             for i, parameter in enumerate(split_text):
@@ -378,6 +394,7 @@ def message(payload):
                     slack_web_client.chat_postMessage(
                         channel=channel_id,
                         text=message,
+                        thread_ts=ts,
                     )
 
 
