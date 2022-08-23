@@ -112,8 +112,8 @@ class Queue:
             date_full = str(date_mjd[0].iso)
             duration = date_mjd[1].value - date_mjd[0].value
             obslength = int(np.round(duration * 86400))
-            date_short = date_full.split(".")[0]
-            returnlist.append(f"{name}: {date_short} ({obslength}s)")
+            date_short = date_full.split(".")[0][:-3]
+            returnlist.append(f"{name}: {date_short} UT ({obslength}s)")
 
         return returnlist
 
