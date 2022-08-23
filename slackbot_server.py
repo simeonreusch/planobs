@@ -153,6 +153,7 @@ def message(payload):
 
         elif split_text[0] == "Plan" or split_text[0] == "plan":
             do_plan = True
+            display_help = False
             ra = None
             dec = None
             date = None
@@ -163,6 +164,11 @@ def message(payload):
             site = "Palomar"
             channel_id = event.get("channel")
             name = split_text[1]
+
+            for i, parameter in enumerate(split_text):
+                if parameter in fuzzy_parameters(["help", "h", "HELP"]):
+                    do_plan = False
+                    display_help = True
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["ra", "RA", "Ra"]):
@@ -192,6 +198,14 @@ def message(payload):
                 ):
                     submit_trigger = True
                     multiday = True
+
+            if display_help:
+                message = f"Hi there. The available commands are *-ra*, *-dec*"
+                slack_web_client.chat_postMessage(
+                    channel=channel_id,
+                    text=message,
+                )
+                return
 
             if not radec_given:
                 if not multiday:
