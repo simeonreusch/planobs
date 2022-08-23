@@ -161,6 +161,16 @@ def message(payload):
 
         elif split_text[0] == "Plan" or split_text[0] == "plan":
 
+            channel_id = event.get("channel")
+
+            if len(split_text) == 1:
+                message = get_help_message()
+                slack_web_client.chat_postMessage(
+                    channel=channel_id,
+                    text=message,
+                )
+                return
+
             do_plan = True
             display_help = False
             ra = None
@@ -171,16 +181,7 @@ def message(payload):
             submit_trigger = False
             alertsource = None
             site = "Palomar"
-            channel_id = event.get("channel")
             name = split_text[1]
-
-            if len(split_text) == 1:
-                message = get_help_message()
-                slack_web_client.chat_postMessage(
-                    channel=channel_id,
-                    text=message,
-                )
-                return
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["help", "h", "HELP"]):
