@@ -111,7 +111,7 @@ def do_obs_plan(
 
 def get_submitted_too() -> str:
     q = Queue(user="DESY")
-    existing_too_queue = q.get_too_queues_nameonly()
+    existing_too_queue = q.get_too_queues_name_and_date()
     message = ""
     for entry in existing_too_queue:
         message += f"{entry}\n"

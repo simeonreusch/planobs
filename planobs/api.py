@@ -7,6 +7,8 @@
 import os, time, logging
 from typing import Union, List, Optional
 
+from astropy.time import Time
+
 from penquins import Kowalski  # type: ignore
 
 logger = logging.getLogger(__name__)
@@ -87,7 +89,7 @@ class Queue:
 
     def get_too_queues_nameonly(self) -> list:
         """
-        Get all the queues, return names of ToO triggers only
+        Get the ToO queues, return names of ToO triggers only
         """
         res = self.get_too_queues()
         logger.debug(res)
@@ -95,6 +97,19 @@ class Queue:
         resultlist = [x["queue_name"] for x in res["data"]]
 
         return resultlist
+
+    def get_too_queues_name_and_date(self) -> list:
+        """
+        Get the ToO queues, return list of "name: date" for slackbot
+        """
+        res = self.get_too_queues()
+        returnlist = []
+        for entry in res["data"]:
+            name = entry["queue_name"]
+            date = Time(entry["validity_window_mjd"][0], format="mjd").iso
+            returnlist.append(f"{name}: {str(date)}")
+
+        return returnlist
 
     def add_trigger_to_queue(
         self,
