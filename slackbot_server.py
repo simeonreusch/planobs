@@ -159,10 +159,16 @@ def message(payload):
         if len(split_text) == 0:
             return
 
-        elif len(split_text) == 1:
-            message = get_help_message()
-
         elif split_text[0] == "Plan" or split_text[0] == "plan":
+
+            if len(split_text) == 1:
+                message = get_help_message()
+                slack_web_client.chat_postMessage(
+                    channel=channel_id,
+                    text=message,
+                )
+                return
+
             do_plan = True
             display_help = False
             ra = None
