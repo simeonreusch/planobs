@@ -140,7 +140,7 @@ def get_help_message(user: str) -> str:
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": f"Hi <@{user}>. This is a bot for planning observations. Just type *Plan IceCube-Name*, e.g. **Plan IC220822A*. Note: Everything display is UT.\n To interact with the current ZTF queue, use *Queue*, not *Plan*.\nOptional arguments available are:",
+                "text": f"Hi <@{user}>. This is a bot for planning observations. Just type *Plan IceCube-Name*, e.g. *Plan IC220822A*. Note: Everything display is UT.\n To interact with the current ZTF queue, use *Queue*, not *Plan*.\nOptional arguments available are:",
             },
             "fields": [
                 {
