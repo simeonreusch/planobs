@@ -89,7 +89,7 @@ class Queue:
         """
         Get all the queues, return names of ToO triggers only
         """
-        res = self.get_all_queues()
+        res = self.get_too_queues()
         logger.debug(res)
 
         resultlist = [x["queue_name"] for x in res["data"]]
