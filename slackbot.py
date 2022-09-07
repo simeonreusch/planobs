@@ -22,6 +22,7 @@ class Slackbot:
         submit_trigger=False,
         alertsource=None,
         site=None,
+        switch_filters=False,
     ):
         self.channel = channel
         self.name = name
@@ -32,6 +33,7 @@ class Slackbot:
         self.submit_trigger = submit_trigger
         self.alertsource = alertsource
         self.site = site
+        self.switch_filters = switch_filters
         self.fields = None
         self.recommended_field = None
         self.coverage = None
@@ -47,6 +49,7 @@ class Slackbot:
                 multiday=self.multiday,
                 alertsource=self.alertsource,
                 site=self.site,
+                switch_filters=self.switch_filters,
             )
             plan.plot_target()
             plt.close()
@@ -65,7 +68,11 @@ class Slackbot:
 
             if self.multiday:
                 multiday_plan = MultiDayObservation(
-                    name=self.name, ra=self.ra, dec=self.dec, startdate=self.date
+                    name=self.name,
+                    ra=self.ra,
+                    dec=self.dec,
+                    startdate=self.date,
+                    switch_filters=self.switch_filters,
                 )
                 if plan.observable is True:
                     self.multiday_summary = multiday_plan.summarytext

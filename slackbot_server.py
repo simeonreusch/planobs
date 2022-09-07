@@ -32,6 +32,7 @@ def do_obs_plan(
     submit_trigger=False,
     alertsource=None,
     site=None,
+    switch_filters=False,
 ):
     """ """
     slack_bot = Slackbot(
@@ -44,6 +45,7 @@ def do_obs_plan(
         submit_trigger=submit_trigger,
         alertsource=alertsource,
         site=site,
+        switch_filters=switch_filters,
     )
     slack_bot.create_plot()
 
@@ -233,6 +235,7 @@ def message(payload):
             radec_given = False
             multiday = False
             submit_trigger = False
+            switch_filters = False
             alertsource = None
             site = "Palomar"
             name = split_text[1]
@@ -263,6 +266,21 @@ def message(payload):
                     ["multiday", "MULTIDAY", "Multiday", "multi", "MULTI", "Multi"]
                 ):
                     multiday = True
+
+            for i, parameter in enumerate(split_text):
+                if parameter in fuzzy_parameters(
+                    [
+                        "switchfilters",
+                        "switch_filters",
+                        "switchfilter",
+                        "switch_filter",
+                        "switchbands",
+                        "switch_bands",
+                        "switchband",
+                        "switch_band",
+                    ]
+                ):
+                    switch_filters = True
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(
@@ -356,6 +374,7 @@ def message(payload):
                     multiday=multiday,
                     submit_trigger=submit_trigger,
                     alertsource=alertsource,
+                    switch_filters=switch_filters,
                     site=site,
                 )
 

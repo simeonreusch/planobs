@@ -50,6 +50,7 @@ class PlanObservation:
         multiday: bool = False,
         alertsource: str = None,
         site: Union[str, Observer] = "Palomar",
+        switch_filters: bool = False,
         verbose: bool = True,
         **kwargs,
     ) -> None:
@@ -62,6 +63,7 @@ class PlanObservation:
         self.observationlength = observationlength
         self.bands = bands
         self.multiday = multiday
+        self.switch_filters = switch_filters
         self.ra: Optional[float] = None
         self.dec: Optional[float] = None
         self.ra_err: Optional[list] = None
@@ -288,6 +290,18 @@ class PlanObservation:
                         self.r_band_recommended_time_start
                         + self.observationlength * u.s
                     )
+
+            if self.switch_filters:
+                if "g" in self.bands and "r" in self.bands:
+                    g_band_temp_start = self.r_band_recommended_time_start
+                    g_band_temp_end = self.r_band_recommended_time_end
+                    self.r_band_recommended_time_start = (
+                        self.g_band_recommended_time_start
+                    )
+                    self.r_band_recommended_time_end = self.g_band_recommended_time_end
+                    self.g_band_recommended_time_start = g_band_temp_start
+                    self.g_band_recommended_time_end = g_band_temp_end
+
         if self.alertsource in icecube:
             summarytext = f"Name = IceCube-{self.name[2:]}\n"
         else:

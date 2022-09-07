@@ -34,6 +34,7 @@ class MultiDayObservation:
         ra: float = None,
         dec: float = None,
         startdate=None,
+        switch_filters: bool = False,
         verbose: bool = True,
         **kwargs,
     ):
@@ -48,9 +49,13 @@ class MultiDayObservation:
         now = datetime.now()
 
         if self.ra is None:
-            plan_initial = PlanObservation(name=name, alertsource="icecube")
+            plan_initial = PlanObservation(
+                name=name, alertsource="icecube", switch_filters=switch_filters
+            )
         else:
-            plan_initial = PlanObservation(name=name, ra=self.ra, dec=self.dec)
+            plan_initial = PlanObservation(
+                name=name, ra=self.ra, dec=self.dec, switch_filters=switch_filters
+            )
 
         if startdate is None:
             first_obs = plan_initial.g_band_recommended_time_start
@@ -88,7 +93,12 @@ class MultiDayObservation:
             for i, day in enumerate(tqdm(next_days)):
                 if NIGHTS[i] not in SHORT_NIGHTS:
                     plan = PlanObservation(
-                        name=name, date=day, ra=ra, dec=dec, verbose=False
+                        name=name,
+                        date=day,
+                        ra=ra,
+                        dec=dec,
+                        switch_filters=switch_filters,
+                        verbose=False,
                     )
                 else:
                     if NIGHTS[i] in ONE_FILTER_NIGHTS:
@@ -102,6 +112,7 @@ class MultiDayObservation:
                         dec=dec,
                         observationlength=30,
                         bands=bands,
+                        switch_filters=switch_filters,
                         verbose=False,
                     )
 
