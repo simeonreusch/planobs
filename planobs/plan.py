@@ -119,7 +119,7 @@ class PlanObservation:
                     self.ra = ra
                     self.dec = dec
                     self.arrivaltime = arrivaltime
-                    self.datasource = revision
+                    self.datasource = f"Notice {revision}\n"
 
                 else:
                     raise ValueError(
