@@ -31,6 +31,7 @@ slack = "^0.0.2"
 slackeventsapi = "^3.0.1"
 tqdm = "^4.64.0"
 ztfquery = "^1.18.4"
+slackclient = "^2.9.4"
 
 [tool.poetry.dev-dependencies]
 coveralls = "^3.3.1"
