@@ -13,10 +13,10 @@ from slackbot import Slackbot
 from astropy.coordinates import EarthLocation  # type: ignore
 from planobs.api import Queue
 
-app = Flask(__name__)
+planobs_slackbot = Flask(__name__)
 
 slack_events_adapter = SlackEventAdapter(
-    os.environ.get("SLACK_EVENTS_TOKEN"), "/slack/events", app
+    os.environ.get("SLACK_EVENTS_TOKEN"), "/slack/events", planobs_slackbot
 )
 slack_web_client = WebClient(token=os.environ.get("SLACK_TOKEN"))
 
@@ -330,7 +330,7 @@ def message(payload):
 
             available_sites = EarthLocation.get_site_names()
             available_sites_reformatted = [
-                entry.replace(" ", "_") for entry in available_sites if entry is not ""
+                entry.replace(" ", "_") for entry in available_sites if entry != ""
             ]
 
             for i, parameter in enumerate(split_text):
