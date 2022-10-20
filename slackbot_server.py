@@ -208,7 +208,7 @@ def message(payload):
 
         text = text.replace("*", "")
         split_text = text.split()
-        logger.info(split_text)
+        logging.info(split_text)
 
         if len(split_text) == 0:
             return
@@ -420,8 +420,5 @@ def message(payload):
 
 
 if __name__ == "__main__":
-    logger = logging.getLogger()
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(logging.StreamHandler())
 
     app.run(host="168.119.229.141", port=3000)
