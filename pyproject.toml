@@ -33,6 +33,7 @@ tqdm = "^4.64.0"
 ztfquery = "^1.18.4"
 slackclient = "^2.9.4"
 gunicorn = "^20.1.0"
+bs4 = "^0.0.1"
 
 [tool.poetry.dev-dependencies]
 coveralls = "^3.3.1"
