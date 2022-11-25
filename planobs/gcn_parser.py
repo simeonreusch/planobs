@@ -202,7 +202,7 @@ def parse_radec(searchstring: str) -> Tuple[float, Optional[float], Optional[flo
     return pos, pos_upper, pos_lower
 
 
-def parse_latest_gcn_notice():
+def parse_latest_gcn_notice() -> dict:
     """ """
     url = "https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html"
 
@@ -215,11 +215,20 @@ def parse_latest_gcn_notice():
     obstime = latest["EVENT"]["Time UT"][0]
     ra = latest["OBSERVATION"]["RA [deg]"][0]
     dec = latest["OBSERVATION"]["Dec [deg]"][0]
+    signalness = latest["OBSERVATION"]["Signalness"][0]
+    energy = latest["OBSERVATION"]["Energy"][0]
     arrivaltime = Time(f"20{date} {obstime}")
 
     logger.debug(ra, dec, arrivaltime, revision)
 
-    return ra, dec, arrivaltime, revision
+    return {
+        "ra": ra,
+        "dec": dec,
+        "arrivaltime": arrivaltime,
+        "signalness": signalness,
+        "energy": energy,
+        "revision": revision,
+    }
 
 
 class ParsingError(Exception):

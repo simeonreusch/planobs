@@ -84,7 +84,12 @@ class PlanObservation:
             # check if name is correct
             assert utils.is_icecube_name(self.name)
 
+            test = gcn_parser.parse_latest_gcn_notice()
+
             gcn_nr = gcn_parser.find_gcn_circular(neutrino_name=self.name)
+            notice = gcn_parser.parse_latest_gcn_notice()
+            self.signalness = notice["signalness"]
+            self.energy = notice["energy"]
 
             if gcn_nr:
 
@@ -112,16 +117,10 @@ class PlanObservation:
                     logger.info(
                         "The IceCube alert is from the same day as the latest GCN circular, there is probably no GCN circular available yet. Using latest GCN notice"
                     )
-                    (
-                        ra,
-                        dec,
-                        arrivaltime,
-                        revision,
-                    ) = gcn_parser.parse_latest_gcn_notice()
-                    self.ra = ra
-                    self.dec = dec
-                    self.arrivaltime = arrivaltime
-                    self.datasource = f"Notice {revision}\n"
+                    self.ra = notice["ra"]
+                    self.dec = notice["dec"]
+                    self.arrivaltime = notice["arrivaltime"]
+                    self.datasource = f"Notice {notice['revision']}\n"
 
                 else:
                     raise ValueError(
@@ -242,6 +241,16 @@ class PlanObservation:
             self.observable = False
             self.rejection_reason = "proximity to gal. plane"
 
+        if self.ra_err:
+
+            self.calculate_area()
+
+            if self.signalness < 0.5 and self.area > 10.0:
+                self.observable = False
+                self.rejection_reason = (
+                    f"(area: {self.area:.1f} sq. deg, sness={self.signalness:.2f})"
+                )
+
         self.g_band_recommended_time_start: Optional[astropy.time.core.Time] = None
         self.g_band_recommended_time_end: Optional[astropy.time.core.Time] = None
         self.r_band_recommended_time_start: Optional[astropy.time.core.Time] = None
@@ -361,6 +370,19 @@ class PlanObservation:
             os.makedirs(self.name)
 
         self.summarytext = summarytext
+
+    def calculate_area(self):
+        """Calculate the on-sky area from sky location and location errors"""
+
+        ra1 = self.ra + self.ra_err[0]
+        ra2 = self.ra + self.ra_err[1]
+        dec1 = self.dec + self.dec_err[0]
+        dec2 = self.dec + self.dec_err[1]
+        self.area = (
+            (180 / np.pi) ** 2
+            * (np.radians(ra2) - np.radians(ra1))
+            * (np.sin(np.radians(dec2)) - np.sin(np.radians(dec1)))
+        )
 
     def plot_target(self):
         """
@@ -537,10 +559,15 @@ class PlanObservation:
             plt.legend()
 
         if self.observable is False:
+
+            if "area" in self.rejection_reason:
+                reason_header = "ABOVE QUALITY THRESHOLD\n"
+            else:
+                reason_header = "NOT OBSERVABLE\ndue to "
             plt.text(
                 0.5,
                 0.5,
-                f"NOT OBSERVABLE\ndue to {self.rejection_reason}",
+                reason_header + f"{self.rejection_reason}",
                 size=20,
                 rotation=30.0,
                 ha="center",
