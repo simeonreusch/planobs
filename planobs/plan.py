@@ -378,7 +378,7 @@ class PlanObservation:
         ra2 = self.ra + self.ra_err[1]
         dec1 = self.dec + self.dec_err[0]
         dec2 = self.dec + self.dec_err[1]
-        self.area = (
+        self.area = np.abs(
             (180 / np.pi) ** 2
             * (np.radians(ra2) - np.radians(ra1))
             * (np.sin(np.radians(dec2)) - np.sin(np.radians(dec1)))
