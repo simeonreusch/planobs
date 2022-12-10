@@ -63,7 +63,7 @@ jobs:
           poetry run coverage run -m pytest -v 
 
       - name: mypy
-        run: poetry run pytest
+        run: poetry run mypy planobs
 
       # Push the coverage result to coveralls.io
       - name: Run Coveralls
