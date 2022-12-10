@@ -139,9 +139,9 @@ class MultiDayObservation:
         self.summarytext += "-------------------------------------------------\n"
         self.summarytext += "g-band observations\n"
 
-        for start, end, obs in zip(g_band_start, g_band_end, observable):
+        for start, end, obs, night in zip(g_band_start, g_band_end, observable, NIGHTS):
             if start is not None and end is not None and obs is not None:
-                self.summarytext += f"Night {NIGHTS[i]} {short_time(start.value)} - {short_time(end.value)}\n"
+                self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)}\n"
                 exposure_time = isotime_delta_to_seconds(
                     isotime_start=start.value, isotime_end=end.value
                 )
@@ -155,7 +155,7 @@ class MultiDayObservation:
                 )
 
             else:
-                self.summarytext += f"Night {NIGHTS[i]} NOT OBSERVABLE\n"
+                self.summarytext += f"Night {night} NOT OBSERVABLE\n"
 
         self.summarytext += "-------------------------------------------------\n"
 
@@ -183,8 +183,12 @@ class MultiDayObservation:
                 )
 
             else:
-                self.summarytext += f"Night {NIGHTS[i]} NOT OBSERVABLE\n"
+                if night not in ONE_FILTER_NIGHTS:
+                    self.summarytext += f"Night {night} NOT OBSERVABLE\n"
+                else:
+                    self.summarytext += f"Night {night} NO OBS SCHEDULED\n"
         self.summarytext += "-------------------------------------------------\n\n"
+        print(repr(self.summarytext))
 
     def print_plan(self):
         print(self.summarytext)
