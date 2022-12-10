@@ -28,6 +28,10 @@ ztf = ["ZTF", "ztf"]
 
 logger = logging.getLogger(__name__)
 
+SIGNALNESS_THRESHOLD = 0.5
+AREA_THRESHOLD = 10.0
+AREA_HARD_THRESHOLD = 50.0
+
 
 class PlanObservation:
     """
@@ -42,13 +46,13 @@ class PlanObservation:
         name: str,
         ra: Optional[float] = None,
         dec: Optional[float] = None,
-        arrivaltime: str = None,
-        date: str = None,
+        arrivaltime: Optional[str] = None,
+        date: Optional[str] = None,
         max_airmass=2.0,
         observationlength: float = 300,
         bands: list = ["g", "r"],
         multiday: bool = False,
-        alertsource: str = None,
+        alertsource: Optional[str] = None,
         site: Union[str, Observer] = "Palomar",
         switch_filters: bool = False,
         verbose: bool = True,
@@ -245,7 +249,7 @@ class PlanObservation:
 
             self.calculate_area()
 
-            if self.signalness < 0.5 and self.area > 10.0:
+            if self.signalness < SIGNALNESS_THRESHOLD and self.area > AREA_THRESHOLD:
                 self.observable = False
                 self.rejection_reason = (
                     f"(area: {self.area:.1f} sq. deg, sness={self.signalness:.2f})"
@@ -316,8 +320,14 @@ class PlanObservation:
         else:
             summarytext = f"Name = {self.name}\n"
 
-        if self.ra_err is not None and self.dec_err is not None:
-            summarytext += f"RA = {self.coordinates.ra.deg} + {self.ra_err[0]} - {self.ra_err[1]*-1.0}\nDec = {self.coordinates.dec.deg} + {self.dec_err[0]} - {self.dec_err[1]*-1.0}\n"
+        if self.ra_err and self.dec_err:
+            if (
+                self.ra_err[0]
+                and self.ra_err[1]
+                and self.dec_err[0]
+                and self.dec_err[1]
+            ):
+                summarytext += f"RA = {self.coordinates.ra.deg} + {self.ra_err[0]} - {self.ra_err[1]*-1.0}\nDec = {self.coordinates.dec.deg} + {self.dec_err[0]} - {self.dec_err[1]*-1.0}\n"
         else:
             summarytext += f"RADEC = {self.coordinates.ra.deg:.8f} {self.coordinates.dec.deg:.8f}\n"
 
@@ -618,8 +628,7 @@ class PlanObservation:
         fieldids_ref = []
 
         if load_refs_from_archive:
-            mt = utils.get_references(fieldids)
-            print(mt)
+            mt: Optional[pd.DataFrame] = utils.get_references(fieldids)
 
         else:
             zq = query.ZTFQuery()
@@ -635,11 +644,12 @@ class PlanObservation:
             zq.load_metadata(kind="ref", sql_query=querystring)
             mt = zq.metatable
 
-        if len(mt) > 0:
-            for f in mt.field.unique():
-                d = {k: k in mt["filtercode"].values for k in ["zg", "zr", "zi"]}
-                if d["zg"] == True and d["zr"] == True:
-                    fieldids_ref.append(int(f))
+        if mt is not None:
+            if len(mt) > 0:
+                for f in mt.field.unique():
+                    d = {k: k in mt["filtercode"].values for k in ["zg", "zr", "zi"]}
+                    if d["zg"] == True and d["zr"] == True:
+                        fieldids_ref.append(int(f))
 
         logger.info(f"Fields that contain target: {fieldids}")
         logger.info(f"Of these have a reference: {fieldids_ref}")

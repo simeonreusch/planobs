@@ -126,7 +126,7 @@ class Queue:
         request_id: int = 1,
         subprogram_name: str = "ToO_Neutrino",
         exposure_time: int = 30,
-        validity_window_end_mjd: float = None,
+        validity_window_end_mjd: Optional[float] = None,
         program_id: int = 2,
         program_pi: str = "Kulkarni",
     ) -> None:

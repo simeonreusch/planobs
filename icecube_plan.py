@@ -10,16 +10,16 @@ logging.basicConfig()
 logging.getLogger("planobs.plan").setLevel(logging.INFO)
 logging.getLogger("planobs.gcn_parser").setLevel(logging.INFO)
 
-name = "IC221124A"  # Name of the alert object
+name = "IC221210A"  # Name of the alert object
 # name = "IC201007A"
-date = "2022-11-24"  # This is optional, defaults to today
+date = "2022-12-10"  # This is optional, defaults to today
 # ra = 242.58
 # dec = 11.61
 # Now no ra and dec values are given, but alertsource is set to 'icecube'. This enables GCN archive parsing for the alert name. If it is not found, it will use the latest GCN notice (these are automated).
 
 plan = PlanObservation(
     name=name,
-    date=None,
+    date=date,
     alertsource="icecube",
     switch_filters=False,
 )

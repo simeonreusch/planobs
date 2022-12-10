@@ -176,6 +176,6 @@ def get_references(fieldids: list) -> Optional[pd.DataFrame]:
     if df_list:
         reference_df = pd.concat(df_list).reset_index(drop=True)
     else:
-        reference_df = None
+        return None
 
     return reference_df

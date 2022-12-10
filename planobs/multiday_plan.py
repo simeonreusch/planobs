@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt  # type: ignore
 import os, logging
 from datetime import datetime, date
 from typing import List, Optional
-import astropy  # type: ignore
+import astropy
 from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
 import numpy as np
 from tqdm import tqdm  # type: ignore
@@ -31,8 +31,8 @@ class MultiDayObservation:
     def __init__(
         self,
         name: str,
-        ra: float = None,
-        dec: float = None,
+        ra: Optional[float] = None,
+        dec: Optional[float] = None,
         startdate=None,
         switch_filters: bool = False,
         verbose: bool = True,
@@ -138,47 +138,52 @@ class MultiDayObservation:
 
         self.summarytext += "-------------------------------------------------\n"
         self.summarytext += "g-band observations\n"
-        for i, item in enumerate(g_band_start):
-            if item is not None:
-                if observable[i]:
-                    self.summarytext += f"Night {NIGHTS[i]} {short_time(item.value)} - {short_time(g_band_end[i].value)}\n"
-                    exposure_time = isotime_delta_to_seconds(
-                        isotime_start=item.value, isotime_end=g_band_end[i].value
-                    )
-                    self.triggers.append(
-                        {
-                            "field_id": recommended_field,
-                            "filter_id": 1,
-                            "mjd_start": isotime_to_mjd(item.value),
-                            "exposure_time": exposure_time,
-                        }
-                    )
+
+        for start, end, obs in zip(g_band_start, g_band_end, observable):
+            if start is not None and end is not None and obs is not None:
+                self.summarytext += f"Night {NIGHTS[i]} {short_time(start.value)} - {short_time(end.value)}\n"
+                exposure_time = isotime_delta_to_seconds(
+                    isotime_start=start.value, isotime_end=end.value
+                )
+                self.triggers.append(
+                    {
+                        "field_id": recommended_field,
+                        "filter_id": 1,
+                        "mjd_start": isotime_to_mjd(start.value),
+                        "exposure_time": exposure_time,
+                    }
+                )
+
             else:
                 self.summarytext += f"Night {NIGHTS[i]} NOT OBSERVABLE\n"
+
         self.summarytext += "-------------------------------------------------\n"
 
         self.summarytext += "\n-------------------------------------------------\n"
         self.summarytext += "r-band observations\n"
 
-        for i, item in enumerate(r_band_start):
-            if NIGHTS[i] not in ONE_FILTER_NIGHTS:
-                if item is not None:
-                    if observable[i]:
-                        self.summarytext += f"Night {NIGHTS[i]} {short_time(item.value)} - {short_time(r_band_end[i].value)}\n"
-                        exposure_time = isotime_delta_to_seconds(
-                            isotime_start=item.value, isotime_end=r_band_end[i].value
-                        )
-                        self.triggers.append(
-                            {
-                                "field_id": recommended_field,
-                                "filter_id": 2,
-                                "mjd_start": isotime_to_mjd(item.value),
-                                "exposure_time": exposure_time,
-                            }
-                        )
+        for start, end, obs, night in zip(r_band_start, r_band_end, observable, NIGHTS):
+            if (
+                start is not None
+                and end is not None
+                and obs is not None
+                and night not in ONE_FILTER_NIGHTS
+            ):
+                self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)}\n"
+                exposure_time = isotime_delta_to_seconds(
+                    isotime_start=start.value, isotime_end=end.value
+                )
+                self.triggers.append(
+                    {
+                        "field_id": recommended_field,
+                        "filter_id": 2,
+                        "mjd_start": isotime_to_mjd(start.value),
+                        "exposure_time": exposure_time,
+                    }
+                )
 
-                else:
-                    self.summarytext += f"Night {NIGHTS[i]} NOT OBSERVABLE\n"
+            else:
+                self.summarytext += f"Night {NIGHTS[i]} NOT OBSERVABLE\n"
         self.summarytext += "-------------------------------------------------\n\n"
 
     def print_plan(self):
