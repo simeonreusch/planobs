@@ -30,7 +30,7 @@ logger = logging.getLogger(__name__)
 
 SIGNALNESS_THRESHOLD = 0.5
 AREA_THRESHOLD = 10.0
-AREA_HARD_THRESHOLD = 50.0
+AREA_HARD_THRESHOLD = 40.0
 
 
 class PlanObservation:
@@ -249,7 +249,9 @@ class PlanObservation:
 
             self.calculate_area()
 
-            if self.signalness < SIGNALNESS_THRESHOLD and self.area > AREA_THRESHOLD:
+            if (
+                self.signalness < SIGNALNESS_THRESHOLD and self.area > AREA_THRESHOLD
+            ) or self.area >= AREA_HARD_THRESHOLD:
                 self.observable = False
                 self.rejection_reason = (
                     f"(area: {self.area:.1f} sq. deg, sness={self.signalness:.2f})"
