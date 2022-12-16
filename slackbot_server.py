@@ -377,6 +377,7 @@ def message(payload):
                     switch_filters=switch_filters,
                     site=site,
                 )
+                return
 
         elif split_text[0] in ["QUEUE", "Queue", "queue"]:
 
@@ -394,6 +395,7 @@ def message(payload):
                         text=message,
                         thread_ts=ts,
                     )
+                    return
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["getfull"]):
@@ -404,6 +406,7 @@ def message(payload):
                         text=message,
                         thread_ts=ts,
                     )
+                    return
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["delete"]):
@@ -417,6 +420,7 @@ def message(payload):
                         text=message,
                         thread_ts=ts,
                     )
+                    return
 
 
 if __name__ == "__main__":
