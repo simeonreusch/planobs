@@ -105,6 +105,7 @@ class TestPlan(unittest.TestCase):
             q.add_trigger_to_queue(
                 trigger_name=f"ToO_{neutrino_name}",
                 validity_window_start_mjd=trigger["mjd_start"],
+                validity_window_end_mjd=trigger["mjd_end"],
                 field_id=trigger["field_id"],
                 filter_id=trigger["filter_id"],
                 exposure_time=trigger["exposure_time"],
@@ -121,7 +122,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_0",
                     "queue_type": "list",
-                    "validity_window_mjd": [59702.44097222222, 59702.44444444444],
+                    "validity_window_mjd": [59702.399305555555, 59702.425],
                     "targets": [
                         {
                             "request_id": 1,
@@ -141,7 +142,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_1",
                     "queue_type": "list",
-                    "validity_window_mjd": [59703.44305555556, 59703.44340277778],
+                    "validity_window_mjd": [59703.396527777775, 59703.464583333334],
                     "targets": [
                         {
                             "request_id": 1,
@@ -161,7 +162,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_2",
                     "queue_type": "list",
-                    "validity_window_mjd": [59704.44236111111, 59704.442708333336],
+                    "validity_window_mjd": [59704.39375, 59704.46319444444],
                     "targets": [
                         {
                             "request_id": 1,
@@ -181,7 +182,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_3",
                     "queue_type": "list",
-                    "validity_window_mjd": [59706.44097222222, 59706.44131944444],
+                    "validity_window_mjd": [59706.388194444444, 59706.461805555555],
                     "targets": [
                         {
                             "request_id": 1,
@@ -201,7 +202,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_4",
                     "queue_type": "list",
-                    "validity_window_mjd": [59708.43958333333, 59708.439930555556],
+                    "validity_window_mjd": [59708.38263888889, 59708.46041666667],
                     "targets": [
                         {
                             "request_id": 1,
@@ -221,7 +222,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_5",
                     "queue_type": "list",
-                    "validity_window_mjd": [59710.4375, 59710.43784722222],
+                    "validity_window_mjd": [59710.37708333333, 59710.410416666666],
                     "targets": [
                         {
                             "request_id": 1,
@@ -241,7 +242,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_6",
                     "queue_type": "list",
-                    "validity_window_mjd": [59702.461805555555, 59702.465277777774],
+                    "validity_window_mjd": [59702.43958333333, 59702.46527777778],
                     "targets": [
                         {
                             "request_id": 1,
@@ -261,7 +262,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_7",
                     "queue_type": "list",
-                    "validity_window_mjd": [59710.458333333336, 59710.45868055556],
+                    "validity_window_mjd": [59710.425, 59710.458333333336],
                     "targets": [
                         {
                             "request_id": 1,
