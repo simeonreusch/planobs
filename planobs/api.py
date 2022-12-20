@@ -121,12 +121,12 @@ class Queue:
         self,
         trigger_name: str,
         validity_window_start_mjd: float,
+        validity_window_end_mjd: float,
         field_id: list,
         filter_id: list,
         request_id: int = 1,
         subprogram_name: str = "ToO_Neutrino",
         exposure_time: int = 30,
-        validity_window_end_mjd: Optional[float] = None,
         program_id: int = 2,
         program_pi: str = "Kulkarni",
     ) -> None:
@@ -139,9 +139,6 @@ class Queue:
             raise ValueError(
                 f"Trigger names must begin with 'ToO_', but you entered '{trigger_name}'"
             )
-
-        if validity_window_end_mjd is None:
-            validity_window_end_mjd = validity_window_start_mjd + exposure_time / 86400
 
         targets = [
             {

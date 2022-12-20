@@ -136,20 +136,23 @@ class MultiDayObservation:
 
         self.summarytext = f"\nYour multi-day observation plan for {name}\n"
 
-        self.summarytext += "-------------------------------------------------\n"
-        self.summarytext += "g-band observations\n"
+        self.summarytext += "--------------------------------------------------------\n"
+        self.summarytext += "g-band observation windows\n"
 
         for start, end, obs, night in zip(g_band_start, g_band_end, observable, NIGHTS):
+
             if start is not None and end is not None and obs is not None:
-                self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)}\n"
-                exposure_time = isotime_delta_to_seconds(
-                    isotime_start=start.value, isotime_end=end.value
-                )
+
+                exposure_time = 30 if night in SHORT_NIGHTS else 300
+
+                self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)} ({exposure_time}s)\n"
+
                 self.triggers.append(
                     {
                         "field_id": recommended_field,
                         "filter_id": 1,
                         "mjd_start": isotime_to_mjd(start.value),
+                        "mjd_end": isotime_to_mjd(end.value),
                         "exposure_time": exposure_time,
                     }
                 )
@@ -157,10 +160,12 @@ class MultiDayObservation:
             else:
                 self.summarytext += f"Night {night} NOT OBSERVABLE\n"
 
-        self.summarytext += "-------------------------------------------------\n"
+        self.summarytext += "--------------------------------------------------------\n"
 
-        self.summarytext += "\n-------------------------------------------------\n"
-        self.summarytext += "r-band observations\n"
+        self.summarytext += (
+            "\n--------------------------------------------------------\n"
+        )
+        self.summarytext += "r-band observation windows\n"
 
         for start, end, obs, night in zip(r_band_start, r_band_end, observable, NIGHTS):
             if (
@@ -169,15 +174,15 @@ class MultiDayObservation:
                 and obs is not None
                 and night not in ONE_FILTER_NIGHTS
             ):
-                self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)}\n"
-                exposure_time = isotime_delta_to_seconds(
-                    isotime_start=start.value, isotime_end=end.value
-                )
+
+                exposure_time = 30 if night in SHORT_NIGHTS else 300
+                self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)} ({exposure_time}s)\n"
                 self.triggers.append(
                     {
                         "field_id": recommended_field,
                         "filter_id": 2,
                         "mjd_start": isotime_to_mjd(start.value),
+                        "mjd_end": isotime_to_mjd(end.value),
                         "exposure_time": exposure_time,
                     }
                 )
@@ -187,8 +192,9 @@ class MultiDayObservation:
                     self.summarytext += f"Night {night} NOT OBSERVABLE\n"
                 else:
                     self.summarytext += f"Night {night} NO OBS SCHEDULED\n"
-        self.summarytext += "-------------------------------------------------\n\n"
-        print(repr(self.summarytext))
+        self.summarytext += (
+            "--------------------------------------------------------\n\n"
+        )
 
     def print_plan(self):
         print(self.summarytext)

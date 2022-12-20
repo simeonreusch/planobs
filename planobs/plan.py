@@ -48,7 +48,7 @@ class PlanObservation:
         dec: Optional[float] = None,
         arrivaltime: Optional[str] = None,
         date: Optional[str] = None,
-        max_airmass=2.0,
+        max_airmass=1.9,
         observationlength: float = 300,
         bands: list = ["g", "r"],
         multiday: bool = False,
@@ -176,12 +176,12 @@ class PlanObservation:
 
         constraints = [
             ap.AltitudeConstraint(20 * u.deg, 90 * u.deg),
-            ap.AirmassConstraint(max_airmass),
+            ap.AirmassConstraint(self.max_airmass),
             ap.AtNightConstraint.twilight_astronomical(),
         ]
 
         # Obtain moon coordinates at Palomar for the full time window (default: 24 hours from running the script)
-        times = Time(self.start_obswindow + np.linspace(0, 24, 1000) * u.hour)
+        times = Time(self.start_obswindow + np.linspace(0, 24, 1440) * u.hour)
         moon_times = Time(self.start_obswindow + np.linspace(0, 24, 50) * u.hour)
         moon_coords = []
 
@@ -224,7 +224,7 @@ class PlanObservation:
                 if (
                     (t_mjd < self.twilight_morning.mjd - 0.03)
                     or (t_mjd > self.twilight_evening.mjd + 0.03)
-                ) and airmass[index] < 2.0:
+                ) and airmass[index] < self.max_airmass:
                     indices_included.append(index)
                     airmasses_included.append(airmass[index])
                     times_included.append(times[index])
@@ -232,7 +232,7 @@ class PlanObservation:
                 if (
                     (t_mjd > self.twilight_evening.mjd + 0.01)
                     and (t_mjd < self.twilight_morning.mjd - 0.01)
-                ) and airmass[index] < 2.0:
+                ) and airmass[index] < self.max_airmass:
                     indices_included.append(index)
                     airmasses_included.append(airmass[index])
                     times_included.append(times[index])
@@ -270,41 +270,35 @@ class PlanObservation:
             distance_to_evening = min_airmass_time.mjd - self.twilight_evening.mjd
             distance_to_morning = self.twilight_morning.mjd - min_airmass_time.mjd
 
-            if distance_to_morning < distance_to_evening:
-                if "g" in self.bands:
-                    self.g_band_recommended_time_start = utils.round_time(
-                        min_airmass_time - self.observationlength * u.s - 0.5 * u.hour
-                    )
-                    self.g_band_recommended_time_end = (
-                        self.g_band_recommended_time_start
-                        + self.observationlength * u.s
-                    )
-                if "r" in self.bands:
-                    self.r_band_recommended_time_start = utils.round_time(
-                        min_airmass_time - self.observationlength * u.s
-                    )
-                    self.r_band_recommended_time_end = (
-                        self.r_band_recommended_time_start
-                        + self.observationlength * u.s
-                    )
+            # now we divide in two blocks of time if there are two bands required
+
+            if len(self.bands) == 2:
+                obs_window_length_min = (times_included[-1] - times_included[0]).to(
+                    u.min
+                )
+                divider = int(len(times_included) / 2)
+                obsblock_1 = times_included[0 : divider - 10]
+                obsblock_2 = times_included[divider + 10 :]
+
+                if distance_to_morning < distance_to_evening:
+                    g_band_obsblock = obsblock_1
+                    r_band_obsblock = obsblock_2
+                else:
+                    g_band_obsblock = obsblock_2
+                    r_band_obsblock = obsblock_1
+
+                self.g_band_recommended_time_start = utils.round_time(
+                    g_band_obsblock[0]
+                )
+                self.g_band_recommended_time_end = utils.round_time(g_band_obsblock[-1])
+                self.r_band_recommended_time_start = utils.round_time(
+                    r_band_obsblock[0]
+                )
+                self.r_band_recommended_time_end = utils.round_time(r_band_obsblock[-1])
 
             else:
-                if "g" in self.bands:
-                    self.g_band_recommended_time_start = utils.round_time(
-                        min_airmass_time + self.observationlength * u.s + 0.5 * u.hour
-                    )
-                    self.g_band_recommended_time_end = (
-                        self.g_band_recommended_time_start
-                        + self.observationlength * u.s
-                    )
-                if "r" in self.bands:
-                    self.r_band_recommended_time_start = utils.round_time(
-                        min_airmass_time + self.observationlength * u.s
-                    )
-                    self.r_band_recommended_time_end = (
-                        self.r_band_recommended_time_start
-                        + self.observationlength * u.s
-                    )
+                self.g_band_recommended_time_start = utils.round_time(times_included[0])
+                self.g_band_recommended_time_end = utils.round_time(times_included[-1])
 
             if self.switch_filters:
                 if "g" in self.bands and "r" in self.bands:
@@ -348,7 +342,7 @@ class PlanObservation:
         if self.site.name == "Palomar":
 
             if self.observable and not self.multiday:
-                summarytext += "Recommended observation times:\n"
+                summarytext += "Recommended observation windows:\n"
                 if "g" in self.bands:
                     gbandtext = f"g-band: {utils.short_time(self.g_band_recommended_time_start)} - {utils.short_time(self.g_band_recommended_time_end)} [UTC]"
                 if "r" in self.bands:
