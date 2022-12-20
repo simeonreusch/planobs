@@ -87,6 +87,7 @@ class Slackbot:
                         q.add_trigger_to_queue(
                             trigger_name=f"ToO_{self.name}",
                             validity_window_start_mjd=trigger["mjd_start"],
+                            validity_window_end_mjd=trigger["mjd_end"],
                             field_id=trigger["field_id"],
                             filter_id=trigger["filter_id"],
                             exposure_time=trigger["exposure_time"],
