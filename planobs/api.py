@@ -4,7 +4,7 @@
 #    Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import os, time, logging
+import os, time, logging, json
 from typing import Union, List, Optional
 
 from astropy.time import Time
@@ -81,7 +81,6 @@ class Queue:
         """
         res = self.get_all_queues()
         logger.debug(res)
-
         resultdict = {}
         resultdict["data"] = [x for x in res["data"] if x["is_TOO"]]
 
@@ -110,10 +109,12 @@ class Queue:
             name = entry["queue_name"]
             date_mjd = Time(entry["validity_window_mjd"], format="mjd")
             date_full = str(date_mjd[0].iso)
-            duration = date_mjd[1].value - date_mjd[0].value
-            obslength = int(np.round(duration * 86400))
+            duration = int((date_mjd[1].value - date_mjd[0].value) * 1440)
+            exposure_time = json.loads(entry["queue"])[0]["exposure_time"]
             date_short = date_full.split(".")[0][:-3]
-            returnlist.append(f"{name}: {date_short} UT ({obslength}s)")
+            returnlist.append(
+                f"{name}: {date_short} UT / window length: {duration} min / exp: {exposure_time}s)"
+            )
 
         return returnlist
 
