@@ -48,7 +48,7 @@ class Slackbot:
                 ra=self.ra,
                 dec=self.dec,
                 date=self.date,
-                max_airmass=self.max_airmass
+                max_airmass=self.max_airmass,
                 multiday=self.multiday,
                 alertsource=self.alertsource,
                 site=self.site,
