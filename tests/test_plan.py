@@ -84,7 +84,9 @@ class TestPlan(unittest.TestCase):
             f"Creating a multiday observation plan for neutrino {neutrino_name}"
         )
         plan = MultiDayObservation(
-            name=neutrino_name, startdate=date, alertsource="icecube"
+            name=neutrino_name,
+            startdate=date,
+            alertsource="icecube",
         )
 
         plt.close()

@@ -34,7 +34,7 @@ class MultiDayObservation:
         ra: float | None = None,
         dec: float | None = None,
         startdate=None,
-        max_airmass: float | None = None,
+        max_airmass: float | None = 1.9,
         switch_filters: bool = False,
         verbose: bool = True,
         **kwargs,

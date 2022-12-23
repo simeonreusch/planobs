@@ -218,6 +218,8 @@ class PlanObservation:
         airmasses_included = []
         times_included = []
 
+        print(self.max_airmass)
+
         for index, t_mjd in enumerate(times.mjd):
             if self.in_night:
                 if (
