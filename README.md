@@ -11,12 +11,12 @@ It checks if the object is observable with a maximum airmass on a given date, pl
 # Requirements
 [ztfquery](https://github.com/mickaelrigault/ztfquery) for checking if fields have a reference.
 
-planobs requires at least Python 3.8
+planobs requires Python 3.10.
 
 # Installation
 Using Pip: ```pip install planobs```.
 
-Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/planobs```, followed by ```poetry install``` This also gives you access to the Slackbot.
+Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/planobs```, followed by ```poetry install``` This also gives you access to the Slackbot. Note for ARM-based macs: The install of `fiona` might fail. In that case, consider using a `conda` and issuing `conda install -c conda-forge fiona` before running `poetry`.
 
 # General usage
 ```python
