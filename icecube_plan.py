@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import logging
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt  # type: ignore
 
 from planobs.plan import PlanObservation
 from planobs.multiday_plan import MultiDayObservation
@@ -10,30 +10,28 @@ logging.basicConfig()
 logging.getLogger("planobs.plan").setLevel(logging.INFO)
 logging.getLogger("planobs.gcn_parser").setLevel(logging.INFO)
 
-name = "IC220501A"  # Name of the alert object
+name = "IC221223A"  # Name of the alert object
 # name = "IC201007A"
-date = "2022-12-10"  # This is optional, defaults to today
+# date = "2022-12-23"  # This is optional, defaults to today
 # ra = 242.58
 # dec = 11.61
 # Now no ra and dec values are given, but alertsource is set to 'icecube'. This enables GCN archive parsing for the alert name. If it is not found, it will use the latest GCN notice (these are automated).
 
-# plan = PlanObservation(
-#     name=name,
-#     date=date,
-#     alertsource="icecube",
-#     switch_filters=False,
-# )
-# plan.plot_target()  # Plots the observing conditions
-# plan.request_ztf_fields()  # Checks in which ZTF fields this object is observable
-# # plan.plot_finding_chart()
-# plt.close()
-
-
-observationplan = MultiDayObservation(
-    name=name, startdate="2022-05-03", switch_filters=False
+plan = PlanObservation(
+    name=name,
+    alertsource="icecube",
+    switch_filters=False,
+    max_airmass=1.5,
 )
-observationplan.print_plan()
-summary = observationplan.summarytext
+plan.plot_target()  # Plots the observing conditions
+plan.request_ztf_fields()  # Checks in which ZTF fields this object is observable
+# plan.plot_finding_chart()
+plt.close()
+
+
+# observationplan = MultiDayObservation(name=name, startdate=date, switch_filters=False)
+# observationplan.print_plan()
+# summary = observationplan.summarytext
 
 # triggers = observationplan.triggers
 
@@ -43,9 +41,14 @@ summary = observationplan.summarytext
 #     q.add_trigger_to_queue(
 #         trigger_name=f"ToO_{name}",
 #         validity_window_start_mjd=trigger["mjd_start"],
+#         validity_window_end_mjd=trigger["mjd_end"],
 #         field_id=trigger["field_id"],
 #         filter_id=trigger["filter_id"],
 #         exposure_time=trigger["exposure_time"],
 #     )
-
+# lol = q.get_too_queues_name_and_date()
+# print(lol)
 # q.print()
+# bla = q.get_triggers()
+# print(repr(bla))
+# q.submit_queue()

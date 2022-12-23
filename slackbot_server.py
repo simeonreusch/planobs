@@ -169,6 +169,10 @@ def get_help_message(user: str) -> str:
                 },
                 {
                     "type": "mrkdwn",
+                    "text": "*-airmass*: Select maximum airmass allowed. Default: 1.9",
+                },
+                {
+                    "type": "mrkdwn",
                     "text": "*-multiday*: Obtains the full multiday observation schedule",
                 },
                 {
@@ -232,6 +236,7 @@ def message(payload):
             ra = None
             dec = None
             date = None
+            max_airmass = 1.9
             radec_given = False
             multiday = False
             submit_trigger = False
@@ -255,6 +260,10 @@ def message(payload):
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["date", "DATE", "Date"]):
                     date = split_text[i + 1]
+
+            for i, parameter in enumerate(split_text):
+                if parameter in fuzzy_parameters(["airmass", "AIRMASS", "Airmass"]):
+                    max_airmass = split_text[i + 1]
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["tomorrow", "TOMORROW", "Tomorrow"]):
@@ -371,6 +380,7 @@ def message(payload):
                     ra=ra,
                     dec=dec,
                     date=date,
+                    max_airmass=max_airmass,
                     multiday=multiday,
                     submit_trigger=submit_trigger,
                     alertsource=alertsource,

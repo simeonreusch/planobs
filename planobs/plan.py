@@ -19,7 +19,6 @@ from datetime import datetime
 from astroplan.plots import plot_airmass, plot_altitude
 from ztfquery import fields, query  # type: ignore
 from shapely.geometry import Polygon  # type: ignore
-from typing import Union, Optional
 
 from planobs import gcn_parser, utils
 
@@ -44,16 +43,16 @@ class PlanObservation:
     def __init__(
         self,
         name: str,
-        ra: Optional[float] = None,
-        dec: Optional[float] = None,
-        arrivaltime: Optional[str] = None,
-        date: Optional[str] = None,
+        ra: float | None = None,
+        dec: float | None = None,
+        arrivaltime: str | None = None,
+        date: str | None = None,
         max_airmass=1.9,
         observationlength: float = 300,
         bands: list = ["g", "r"],
         multiday: bool = False,
-        alertsource: Optional[str] = None,
-        site: Union[str, Observer] = "Palomar",
+        alertsource: str | None = None,
+        site: str | Observer = "Palomar",
         switch_filters: bool = False,
         verbose: bool = True,
         **kwargs,
@@ -68,10 +67,10 @@ class PlanObservation:
         self.bands = bands
         self.multiday = multiday
         self.switch_filters = switch_filters
-        self.ra: Optional[float] = None
-        self.dec: Optional[float] = None
-        self.ra_err: Optional[list] = None
-        self.dec_err: Optional[list] = None
+        self.ra: float | None = None
+        self.dec: float | None = None
+        self.ra_err: list | None = None
+        self.dec_err: list | None = None
         self.warning = None
         self.observable = True
         self.rejection_reason = None
@@ -257,10 +256,10 @@ class PlanObservation:
                     f"(area: {self.area:.1f} sq. deg, sness={self.signalness:.2f})"
                 )
 
-        self.g_band_recommended_time_start: Optional[astropy.time.core.Time] = None
-        self.g_band_recommended_time_end: Optional[astropy.time.core.Time] = None
-        self.r_band_recommended_time_start: Optional[astropy.time.core.Time] = None
-        self.r_band_recommended_time_end: Optional[astropy.time.core.Time] = None
+        self.g_band_recommended_time_start: astropy.time.core.Time | None = None
+        self.g_band_recommended_time_end: astropy.time.core.Time | None = None
+        self.r_band_recommended_time_start: astropy.time.core.Time | None = None
+        self.r_band_recommended_time_end: astropy.time.core.Time | None = None
 
         if self.observable:
             min_airmass = np.min(airmasses_included)
@@ -624,7 +623,7 @@ class PlanObservation:
         fieldids_ref = []
 
         if load_refs_from_archive:
-            mt: Optional[pd.DataFrame] = utils.get_references(fieldids)
+            mt: pd.DataFrame | None = utils.get_references(fieldids)
 
         else:
             zq = query.ZTFQuery()

@@ -2,7 +2,7 @@
 import matplotlib.pyplot as plt  # type: ignore
 import os, logging
 from datetime import datetime, date
-from typing import List, Optional
+from typing import List
 import astropy
 from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
 import numpy as np
@@ -31,9 +31,10 @@ class MultiDayObservation:
     def __init__(
         self,
         name: str,
-        ra: Optional[float] = None,
-        dec: Optional[float] = None,
+        ra: float | None = None,
+        dec: float | None = None,
         startdate=None,
+        max_airmass: float | None = None,
         switch_filters: bool = False,
         verbose: bool = True,
         **kwargs,
@@ -43,6 +44,8 @@ class MultiDayObservation:
         self.ra = ra
         self.dec = dec
 
+        self.max_airmass = max_airmass
+
         self.triggers: list = []
 
         today = date.today()
@@ -50,11 +53,18 @@ class MultiDayObservation:
 
         if self.ra is None:
             plan_initial = PlanObservation(
-                name=name, alertsource="icecube", switch_filters=switch_filters
+                name=name,
+                alertsource="icecube",
+                max_airmass=self.max_airmass,
+                switch_filters=switch_filters,
             )
         else:
             plan_initial = PlanObservation(
-                name=name, ra=self.ra, dec=self.dec, switch_filters=switch_filters
+                name=name,
+                ra=self.ra,
+                dec=self.dec,
+                max_airmass=self.max_airmass,
+                switch_filters=switch_filters,
             )
 
         if startdate is None:
@@ -72,11 +82,11 @@ class MultiDayObservation:
         ra = plan_initial.ra
         dec = plan_initial.dec
 
-        observable: List[Optional[bool]] = []
-        g_band_start: List[Optional[astropy.time.core.Time]] = []
-        g_band_end: List[Optional[astropy.time.core.Time]] = []
-        r_band_start: List[Optional[astropy.time.core.Time]] = []
-        r_band_end: List[Optional[astropy.time.core.Time]] = []
+        observable: List[bool | None] = []
+        g_band_start: List[astropy.time.core.Time | None] = []
+        g_band_end: List[astropy.time.core.Time | None] = []
+        r_band_start: List[astropy.time.core.Time | None] = []
+        r_band_end: List[astropy.time.core.Time | None] = []
 
         plan_initial.request_ztf_fields()
 
@@ -97,6 +107,7 @@ class MultiDayObservation:
                         date=day,
                         ra=ra,
                         dec=dec,
+                        max_airmass=self.max_airmass,
                         switch_filters=switch_filters,
                         verbose=False,
                     )
@@ -110,6 +121,7 @@ class MultiDayObservation:
                         date=day,
                         ra=ra,
                         dec=dec,
+                        max_airmass=self.max_airmass,
                         observationlength=30,
                         bands=bands,
                         switch_filters=switch_filters,
