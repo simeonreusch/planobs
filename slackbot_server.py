@@ -265,7 +265,7 @@ def message(payload):
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["airmass", "AIRMASS", "Airmass"]):
-                    max_airmass = split_text[i + 1]
+                    max_airmass = float(split_text[i + 1])
 
             for i, parameter in enumerate(split_text):
                 if parameter in fuzzy_parameters(["tomorrow", "TOMORROW", "Tomorrow"]):
