@@ -112,11 +112,13 @@ class Queue:
             duration = int((date_mjd[1].value - date_mjd[0].value) * 1440)
             if q := json.loads(entry["queue"]):
                 exposure_time = f"exp: {(q[0]['exposure_time'])}s"
+                field = f"field: {(q[0]['field_id'])}"
             else:
-                exposure_time = "not available"
+                exposure_time = "exp: *not available*"
+                field = "field: *not available*"
             date_short = date_full.split(".")[0][:-3]
             returnlist.append(
-                f"{name}: {date_short} UT / window length: {duration} min / {exposure_time})"
+                f"{name}: {date_short} UT / window length: {duration} min / {exposure_time} / {field})"
             )
 
         return returnlist

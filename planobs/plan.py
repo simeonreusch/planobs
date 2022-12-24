@@ -218,8 +218,6 @@ class PlanObservation:
         airmasses_included = []
         times_included = []
 
-        print(self.max_airmass)
-
         for index, t_mjd in enumerate(times.mjd):
             if self.in_night:
                 if (
@@ -277,9 +275,11 @@ class PlanObservation:
                 obs_window_length_min = (times_included[-1] - times_included[0]).to(
                     u.min
                 )
+
+                # Create two blocks, separated by 2*8 minutes
                 divider = int(len(times_included) / 2)
-                obsblock_1 = times_included[0 : divider - 10]
-                obsblock_2 = times_included[divider + 10 :]
+                obsblock_1 = times_included[0 : divider - 8]
+                obsblock_2 = times_included[divider + 8 :]
 
                 if distance_to_morning < distance_to_evening:
                     g_band_obsblock = obsblock_1
