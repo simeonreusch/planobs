@@ -110,10 +110,13 @@ class Queue:
             date_mjd = Time(entry["validity_window_mjd"], format="mjd")
             date_full = str(date_mjd[0].iso)
             duration = int((date_mjd[1].value - date_mjd[0].value) * 1440)
-            exposure_time = json.loads(entry["queue"])[0]["exposure_time"]
+            if q := json.loads(entry["queue"]):
+                exposure_time = f"exp: {(q[0]['exposure_time'])}s"
+            else:
+                exposure_time = "not available"
             date_short = date_full.split(".")[0][:-3]
             returnlist.append(
-                f"{name}: {date_short} UT / window length: {duration} min / exp: {exposure_time}s)"
+                f"{name}: {date_short} UT / window length: {duration} min / {exposure_time})"
             )
 
         return returnlist

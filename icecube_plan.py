@@ -11,29 +11,34 @@ logging.getLogger("planobs.plan").setLevel(logging.INFO)
 logging.getLogger("planobs.gcn_parser").setLevel(logging.INFO)
 
 name = "IC221223A"  # Name of the alert object
+max_airmass = 1.6
 # name = "IC201007A"
 # date = "2022-12-23"  # This is optional, defaults to today
 # ra = 242.58
 # dec = 11.61
 # Now no ra and dec values are given, but alertsource is set to 'icecube'. This enables GCN archive parsing for the alert name. If it is not found, it will use the latest GCN notice (these are automated).
 
-plan = PlanObservation(
-    name=name,
-    alertsource="icecube",
-    switch_filters=False,
-    max_airmass=1.5,
-)
-plan.plot_target()  # Plots the observing conditions
-plan.request_ztf_fields()  # Checks in which ZTF fields this object is observable
-# plan.plot_finding_chart()
-plt.close()
+# plan = PlanObservation(
+#     name=name,
+#     alertsource="icecube",
+#     switch_filters=False,
+#     max_airmass=max_airmass,
+# )
+# plan.plot_target()  # Plots the observing conditions
+# plan.request_ztf_fields()  # Checks in which ZTF fields this object is observable
+# # plan.plot_finding_chart()
+# plt.close()
 
 
-# observationplan = MultiDayObservation(name=name, startdate=date, switch_filters=False)
+# observationplan = MultiDayObservation(
+#     name=name, startdate=None, max_airmass=max_airmass, switch_filters=False
+# )
 # observationplan.print_plan()
 # summary = observationplan.summarytext
+# print(summary)
 
 # triggers = observationplan.triggers
+# print(triggers)
 
 # q = Queue(user="DESY")
 
@@ -46,8 +51,9 @@ plt.close()
 #         filter_id=trigger["filter_id"],
 #         exposure_time=trigger["exposure_time"],
 #     )
-# lol = q.get_too_queues_name_and_date()
-# print(lol)
+q = Queue(user="DESY")
+lol = q.get_too_queues_name_and_date()
+print(lol)
 # q.print()
 # bla = q.get_triggers()
 # print(repr(bla))
