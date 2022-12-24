@@ -95,7 +95,7 @@ class TestPlan(unittest.TestCase):
         plan.print_triggers()
 
         summary = plan.summarytext
-        summary_expected = "\nYour multi-day observation plan for IC220501A\n--------------------------------------------------------\ng-band observation windows\nNight 1 2022-05-03 09:35:00 - 2022-05-03 10:12:00 (300s)\nNight 2 2022-05-04 09:31:00 - 2022-05-04 11:09:00 (30s)\nNight 3 2022-05-05 09:27:00 - 2022-05-05 11:07:00 (30s)\nNight 5 2022-05-07 09:19:00 - 2022-05-07 11:05:00 (30s)\nNight 7 2022-05-09 09:11:00 - 2022-05-09 11:03:00 (30s)\nNight 9 2022-05-11 09:03:00 - 2022-05-11 09:51:00 (30s)\n--------------------------------------------------------\n\n--------------------------------------------------------\nr-band observation windows\nNight 1 2022-05-03 10:33:00 - 2022-05-03 11:10:00 (300s)\nNight 2 NO OBS SCHEDULED\nNight 3 NO OBS SCHEDULED\nNight 5 NO OBS SCHEDULED\nNight 7 NO OBS SCHEDULED\nNight 9 2022-05-11 10:12:00 - 2022-05-11 11:00:00 (30s)\n--------------------------------------------------------\n\n"
+        summary_expected = "\nYour multi-day observation plan for IC220501A\n--------------------------------------------------------\ng-band observation windows\nNight 1 2022-05-03 09:35:00 - 2022-05-03 10:14:00 (300s)\nNight 2 2022-05-04 09:31:00 - 2022-05-04 11:09:00 (30s)\nNight 3 2022-05-05 09:27:00 - 2022-05-05 11:07:00 (30s)\nNight 5 2022-05-07 09:19:00 - 2022-05-07 11:05:00 (30s)\nNight 7 2022-05-09 09:11:00 - 2022-05-09 11:03:00 (30s)\nNight 9 2022-05-11 09:03:00 - 2022-05-11 09:53:00 (30s)\n--------------------------------------------------------\n\n--------------------------------------------------------\nr-band observation windows\nNight 1 2022-05-03 10:31:00 - 2022-05-03 11:10:00 (300s)\nNight 2 NO OBS SCHEDULED\nNight 3 NO OBS SCHEDULED\nNight 5 NO OBS SCHEDULED\nNight 7 NO OBS SCHEDULED\nNight 9 2022-05-11 10:10:00 - 2022-05-11 11:00:00 (30s)\n--------------------------------------------------------\n\n"
 
         self.assertEqual(summary, summary_expected)
 
@@ -124,7 +124,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_0",
                     "queue_type": "list",
-                    "validity_window_mjd": [59702.399305555555, 59702.425],
+                    "validity_window_mjd": [59702.399305555555, 59702.42638888889],
                     "targets": [
                         {
                             "request_id": 1,
@@ -224,7 +224,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_5",
                     "queue_type": "list",
-                    "validity_window_mjd": [59710.37708333333, 59710.410416666666],
+                    "validity_window_mjd": [59710.37708333333, 59710.41180555556],
                     "targets": [
                         {
                             "request_id": 1,
@@ -244,7 +244,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_6",
                     "queue_type": "list",
-                    "validity_window_mjd": [59702.43958333333, 59702.46527777778],
+                    "validity_window_mjd": [59702.43819444445, 59702.46527777778],
                     "targets": [
                         {
                             "request_id": 1,
@@ -264,7 +264,7 @@ class TestPlan(unittest.TestCase):
                     "user": "DESY",
                     "queue_name": "ToO_IC220501A_7",
                     "queue_type": "list",
-                    "validity_window_mjd": [59710.425, 59710.458333333336],
+                    "validity_window_mjd": [59710.42361111111, 59710.458333333336],
                     "targets": [
                         {
                             "request_id": 1,
