@@ -665,9 +665,14 @@ class PlanObservation:
         ccds = fields._CCD_COORDS
 
         coverage = {}
+        distance = {}
 
         for f in self.fieldids_ref:
             centroid = fields.get_field_centroid(f)
+            centroid_coords = SkyCoord(
+                centroid[0][0] * u.deg, centroid[0][1] * u.deg, frame="icrs"
+            )
+            dist_to_target = self.coordinates.separation(centroid_coords).deg
 
             fig, ax = plt.subplots(dpi=300)
 
@@ -701,6 +706,7 @@ class PlanObservation:
                 cov = covered_area / errorbox.area * 100
 
                 coverage.update({f: cov})
+                distance.update({f: dist_to_target})
 
             ax.scatter([self.ra], [self.dec], color="red")
 
@@ -718,15 +724,16 @@ class PlanObservation:
             plt.close()
 
         self.coverage = coverage
+        self.distance = distance
 
         if len(self.coverage) > 0:
-
-            max_coverage_field = max(coverage, key=coverage.get)
+            max_coverage_field = max(self.coverage, key=self.coverage.get)
 
             self.recommended_field = max_coverage_field
 
         else:
-            self.recommended_field = None
+            # no errors -> no coverage -> let's use the more central field
+            self.recommended_field = min(self.distance, key=self.distance.get)
 
     def plot_finding_chart(self):
         """ """
