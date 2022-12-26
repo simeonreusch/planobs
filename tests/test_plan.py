@@ -47,7 +47,7 @@ class TestPlan(unittest.TestCase):
         plt.close()
 
         recommended_field = plan.recommended_field
-        recommended_field_expected = None
+        recommended_field_expected = 597
 
         self.assertEqual(recommended_field, recommended_field_expected)
 
