@@ -673,6 +673,7 @@ class PlanObservation:
                 centroid[0][0] * u.deg, centroid[0][1] * u.deg, frame="icrs"
             )
             dist_to_target = self.coordinates.separation(centroid_coords).deg
+            distance.update({f: dist_to_target})
 
             fig, ax = plt.subplots(dpi=300)
 
@@ -706,7 +707,6 @@ class PlanObservation:
                 cov = covered_area / errorbox.area * 100
 
                 coverage.update({f: cov})
-                distance.update({f: dist_to_target})
 
             ax.scatter([self.ra], [self.dec], color="red")
 
