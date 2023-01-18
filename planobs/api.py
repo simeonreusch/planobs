@@ -187,6 +187,7 @@ class Queue:
             logger.debug(res)
 
             if res["status"] != "success":
+                logger.warning(res)
                 err = "something went wrong with submitting."
                 raise APIError(err)
 

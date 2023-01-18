@@ -17,7 +17,7 @@ keywords = ["astroparticle physics", "science", "multimessenger astronomy", "ZTF
 
 [tool.poetry.dependencies]
 cligj = "^0.7.2"
-python = ">=3.9,<3.11"
+python = ">=3.10,<3.12"
 astroplan = ">=0.7"
 astropy = "^5.0"
 Flask = "^2.1.3"
