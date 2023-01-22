@@ -646,7 +646,7 @@ class PlanObservation:
 
     def request_ztf_fields(
         self, plot: bool = True, load_refs_from_archive: bool = True
-    ) -> list:
+    ) -> list | None:
         """
         Get all fields that contain our target
         """
