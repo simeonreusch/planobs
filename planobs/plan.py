@@ -402,6 +402,9 @@ class PlanObservation:
         Plot the observation window, including moon, altitude
         constraint and target on sky
         """
+        if self.summarytext == "No GCN notice/circular found.":
+            logger.warning("No GCN notice/circular found, skipping plot")
+            return
         now_mjd = Time(self.now, format="iso").mjd
 
         if self.date is not None:
@@ -625,6 +628,9 @@ class PlanObservation:
         """
         Get all fields that contain our target
         """
+        if self.summarytext == "No GCN notice/circular found.":
+            logger.warning("No GCN notice/circular found, skipping finding fields.")
+            return
 
         radius = 0
         fieldids = list(fields.get_fields_containing_target(ra=self.ra, dec=self.dec))
