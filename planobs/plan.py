@@ -116,6 +116,15 @@ class PlanObservation:
                         format="iso",
                     ).mjd
                 )
+                mjd_rounded_today = int(Time.now().mjd)
+                if int(this alert_date) > mjd_rounded_today:
+                    logger.warn("You entered a neutrino from the future. Please check.")
+                    self.datasource = None
+                    self.ra = None
+                    self.dec = None
+                    self.summarytext = "Alert is from the future."
+                    return None
+
                 if this_alert_date >= int(latest_gcn_time):
                     logger.info(
                         "The IceCube alert is from the same day as the latest GCN circular, there is probably no GCN circular available yet. Using latest GCN notice"
@@ -134,7 +143,7 @@ class PlanObservation:
                     logger.warning(
                         "Alert is neither too new, nor in the archive. You probably made a mistake when entering the IceCube name."
                     )
-                    return
+                    return None
 
         elif ra is None and self.alertsource in ztf:
             if utils.is_ztf_name(name):
@@ -402,9 +411,9 @@ class PlanObservation:
         Plot the observation window, including moon, altitude
         constraint and target on sky
         """
-        if self.summarytext == "No GCN notice/circular found.":
+        if self.summarytext == "No GCN notice/circular found." or self.summarytext == "Alert is from the future.":
             logger.warning("No GCN notice/circular found, skipping plot")
-            return
+            return None
         now_mjd = Time(self.now, format="iso").mjd
 
         if self.date is not None:
@@ -628,9 +637,9 @@ class PlanObservation:
         """
         Get all fields that contain our target
         """
-        if self.summarytext == "No GCN notice/circular found.":
+        if self.summarytext == "No GCN notice/circular found." or self.summarytext == "Alert is from the future.":
             logger.warning("No GCN notice/circular found, skipping finding fields.")
-            return
+            return None
 
         radius = 0
         fieldids = list(fields.get_fields_containing_target(ra=self.ra, dec=self.dec))

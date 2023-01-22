@@ -61,13 +61,24 @@ def do_obs_plan(
     if slack_bot.summary == "No GCN notice/circular found.":
         text = slack_bot.summary
         text += (
-            f"\n Make sure you entered the correct neutrino name (you entered {name})."
+            f"\nMake sure you entered the correct neutrino name (you entered {name})."
         )
         slack_web_client.chat_postMessage(
             channel=channel,
             text=text,
             thread_ts=ts,
         )
+        return None
+
+    if slack_bot.summary == "Alert is from the future.":
+        text = slack_bot.summary
+        text += f"\nYou entered an IceCube name that can not be correct, please check (you entered {name})."
+        slack_web_client.chat_postMessage(
+            channel=channel,
+            text=text,
+            thread_ts=ts,
+        )
+        return None
 
     if slack_bot.fields is not None:
         slack_web_client.chat_postMessage(
