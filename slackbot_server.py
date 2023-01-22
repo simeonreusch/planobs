@@ -57,6 +57,18 @@ def do_obs_plan(
         text=slack_bot.summary,
         thread_ts=ts,
     )
+
+    if slack_bot.summary == "No GCN notice/circular found.":
+        text = slack_bot.summary
+        text += (
+            f"\n Make sure you entered the correct neutrino name (you entered {name})."
+        )
+        slack_web_client.chat_postMessage(
+            channel=channel,
+            text=text,
+            thread_ts=ts,
+        )
+
     if slack_bot.fields is not None:
         slack_web_client.chat_postMessage(
             channel=channel,

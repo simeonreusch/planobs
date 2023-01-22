@@ -126,9 +126,15 @@ class PlanObservation:
                     self.datasource = f"Notice {notice['revision']}\n"
 
                 else:
-                    raise ValueError(
+                    self.datasource = None
+                    self.ra = None
+                    self.dec = None
+                    self.summarytext = "No GCN notice/circular found."
+
+                    logger.warning(
                         "Alert is neither too new, nor in the archive. You probably made a mistake when entering the IceCube name."
                     )
+                    return
 
         elif ra is None and self.alertsource in ztf:
             if utils.is_ztf_name(name):

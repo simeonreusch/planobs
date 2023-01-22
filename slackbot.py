@@ -58,6 +58,7 @@ class Slackbot:
             plt.close()
 
             self.summary = plan.get_summary()
+
             if plan.observable is True:
                 if self.site == "Palomar":
                     self.fields = plan.request_ztf_fields()
@@ -67,7 +68,10 @@ class Slackbot:
                 else:
                     self.summary = "No fields available (select 'Palomar' as site)"
             else:
-                self.summary = "Not observable!"
+                if self.summary == "No GCN notice/circular found.":
+                    return
+                else:
+                    self.summary = "Not observable!"
 
             if self.multiday:
                 multiday_plan = MultiDayObservation(
