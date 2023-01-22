@@ -117,7 +117,7 @@ class PlanObservation:
                     ).mjd
                 )
                 mjd_rounded_today = int(Time.now().mjd)
-                if int(this alert_date) > mjd_rounded_today:
+                if int(this_alert_date) > mjd_rounded_today:
                     logger.warn("You entered a neutrino from the future. Please check.")
                     self.datasource = None
                     self.ra = None
@@ -393,6 +393,19 @@ class PlanObservation:
 
         self.summarytext = summarytext
 
+    def gcn_fail(self, methodname: str):
+        if self.summarytext == "No GCN notice/circular found.":
+            logger.warning(
+                f"No GCN notice/circular found for {self.name}, skipping {methodname}"
+            )
+            return True
+        if self.summarytext == "Alert is from the future.":
+            logger.warning(
+                f"Alert from the future entered ({self.name}), skipping {methodname}"
+            )
+            return True
+        return False
+
     def calculate_area(self):
         """Calculate the on-sky area from sky location and location errors"""
 
@@ -411,9 +424,9 @@ class PlanObservation:
         Plot the observation window, including moon, altitude
         constraint and target on sky
         """
-        if self.summarytext == "No GCN notice/circular found." or self.summarytext == "Alert is from the future.":
-            logger.warning("No GCN notice/circular found, skipping plot")
+        if self.gcn_fail("plot"):
             return None
+
         now_mjd = Time(self.now, format="iso").mjd
 
         if self.date is not None:
@@ -637,8 +650,7 @@ class PlanObservation:
         """
         Get all fields that contain our target
         """
-        if self.summarytext == "No GCN notice/circular found." or self.summarytext == "Alert is from the future.":
-            logger.warning("No GCN notice/circular found, skipping finding fields.")
+        if self.gcn_fail("field retrieval"):
             return None
 
         radius = 0
