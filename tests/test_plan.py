@@ -17,14 +17,12 @@ logging.getLogger("planobs.api").setLevel(logging.DEBUG)
 
 class TestPlan(unittest.TestCase):
     def setUp(self):
-
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.DEBUG)
 
         self.max_distance_diff_arcsec = 2
 
     def test_gcn_parser(self):
-
         self.logger.info("\n\n Testing GCN parser \n\n")
 
         latest = gcn_parser.parse_latest_gcn_notice()
@@ -34,7 +32,6 @@ class TestPlan(unittest.TestCase):
         self.assertGreater(len(latest), 0)
 
     def test_ztf_plan(self):
-
         self.logger.info("\n\n Testing ZTF Plan \n\n")
 
         name = "ZTF19accdntg"
@@ -52,7 +49,6 @@ class TestPlan(unittest.TestCase):
         self.assertEqual(recommended_field, recommended_field_expected)
 
     def test_icecube_plan(self):
-
         self.logger.info("\n\n Testing IceCube Plan \n\n")
 
         neutrino_name = "IC220624A"
@@ -74,7 +70,6 @@ class TestPlan(unittest.TestCase):
         self.assertEqual(recommended_field, recommended_field_expected)
 
     def test_icecube_multiday_plan(self):
-
         self.logger.info("\n\n Testing IceCube Multiday Plan \n\n")
 
         neutrino_name = "IC220501A"

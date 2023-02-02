@@ -27,7 +27,6 @@ class Queue:
         self,
         user: str,
     ) -> None:
-
         self.user = user
         self.protocol: str = "https"
         self.host: str = os.environ.get("KOWALSKI_HOST", default="localhost")

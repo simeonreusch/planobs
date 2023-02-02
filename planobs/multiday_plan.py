@@ -39,7 +39,6 @@ class MultiDayObservation:
         verbose: bool = True,
         **kwargs,
     ):
-
         self.name = name
         self.ra = ra
         self.dec = dec
@@ -152,9 +151,7 @@ class MultiDayObservation:
         self.summarytext += "g-band observation windows\n"
 
         for start, end, obs, night in zip(g_band_start, g_band_end, observable, NIGHTS):
-
             if start is not None and end is not None and obs is not None:
-
                 exposure_time = 30 if night in SHORT_NIGHTS else 300
 
                 self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)} ({exposure_time}s)\n"
@@ -186,7 +183,6 @@ class MultiDayObservation:
                 and obs is not None
                 and night not in ONE_FILTER_NIGHTS
             ):
-
                 exposure_time = 30 if night in SHORT_NIGHTS else 300
                 self.summarytext += f"Night {night} {short_time(start.value)} - {short_time(end.value)} ({exposure_time}s)\n"
                 self.triggers.append(

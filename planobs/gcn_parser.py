@@ -36,7 +36,6 @@ def find_gcn_circular(neutrino_name: str):
     res = json.loads(r.text)
 
     if res["data"]["allEventCard"]["edges"]:
-
         event_id = res["data"]["allEventCard"]["edges"][0]["node"]["id_"]
 
         querystr = (

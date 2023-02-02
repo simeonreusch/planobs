@@ -57,7 +57,6 @@ class PlanObservation:
         verbose: bool = True,
         **kwargs,
     ) -> None:
-
         self.name = name
         self.arrivaltime = arrivaltime
         self.alertsource = alertsource
@@ -95,7 +94,6 @@ class PlanObservation:
             self.energy = notice["energy"]
 
             if gcn_nr:
-
                 logger.info(f"Found a GCN, number is {gcn_nr}")
                 gcn_info = gcn_parser.parse_gcn_circular(gcn_nr)
                 self.ra = gcn_info["ra"]
@@ -106,7 +104,6 @@ class PlanObservation:
                 self.datasource = f"GCN Circular {gcn_nr}\n"
 
             else:
-
                 logger.info("Found no GCN")
 
                 latest_gcn_time = gcn_parser.get_time_of_latest_gcn_circular()
@@ -260,7 +257,6 @@ class PlanObservation:
             self.rejection_reason = "proximity to gal. plane"
 
         if self.ra_err:
-
             self.calculate_area()
 
             if (
@@ -356,7 +352,6 @@ class PlanObservation:
             summarytext += f"Site: {self.site.name}"
 
         if self.site.name == "Palomar":
-
             if self.observable and not self.multiday:
                 summarytext += "Recommended observation windows:\n"
                 if "g" in self.bands:
@@ -597,7 +592,6 @@ class PlanObservation:
             plt.legend()
 
         if self.observable is False:
-
             if "area" in self.rejection_reason:
                 reason_header = "ABOVE QUALITY THRESHOLD\n"
             else:

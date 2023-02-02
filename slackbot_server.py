@@ -243,7 +243,6 @@ def message(payload):
             return
 
         elif split_text[0] == "Plan" or split_text[0] == "plan":
-
             channel_id = event.get("channel")
 
             if len(split_text) == 1:
@@ -415,7 +414,6 @@ def message(payload):
                 return
 
         elif split_text[0] in ["QUEUE", "Queue", "queue"]:
-
             channel_id = event.get("channel")
 
             for i, parameter in enumerate(split_text):
@@ -459,5 +457,4 @@ def message(payload):
 
 
 if __name__ == "__main__":
-
     app.run(host="168.119.229.141", port=3000)
