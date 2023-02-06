@@ -2330,13 +2330,13 @@ multidict = ">=4.0"
 
 [[package]]
 name = "ztfquery"
-version = "1.21.0"
+version = "1.21.1"
 description = "access ZTF data from python"
 category = "main"
 optional = false
 python-versions = "*"
 files = [
-    {file = "ztfquery-1.21.0.tar.gz", hash = "sha256:0675bfbe94cc8728d32e00ac3275325b3776917be6de814b7f6cab8bb671e705"},
+    {file = "ztfquery-1.21.1.tar.gz", hash = "sha256:4f11b5a46e655e89965d8f9881b250fe423f8f49416999a7cf08ad0f85678cf7"},
 ]
 
 [extras]
