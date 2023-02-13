@@ -255,7 +255,7 @@ lxml = ["lxml"]
 name = "black"
 version = "23.1.0"
 description = "The uncompromising code formatter."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1291,7 +1291,7 @@ yaml = ["PyYAML (>=5.1.0)"]
 name = "mypy"
 version = "1.0.0"
 description = "Optional static typing for Python"
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1338,7 +1338,7 @@ reports = ["lxml"]
 name = "mypy-extensions"
 version = "0.4.3"
 description = "Experimental type system extensions for programs checked with the mypy typechecker."
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 files = [
@@ -1448,7 +1448,7 @@ test = ["hypothesis (>=5.5.3)", "pytest (>=6.0)", "pytest-xdist (>=1.31)"]
 name = "pathspec"
 version = "0.11.0"
 description = "Utility library for gitignore style pattern matching of file paths."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -1569,7 +1569,7 @@ tests = ["check-manifest", "coverage", "defusedxml", "markdown2", "olefile", "pa
 name = "platformdirs"
 version = "2.6.2"
 description = "A small Python package for determining appropriate platform-specific dirs, e.g. a \"user data dir\"."
-category = "main"
+category = "dev"
 optional = false
 python-versions = ">=3.7"
 files = [
@@ -2170,7 +2170,7 @@ telegram = ["requests"]
 name = "types-requests"
 version = "2.28.11.12"
 description = "Typing stubs for requests"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 files = [
@@ -2185,7 +2185,7 @@ types-urllib3 = "<1.27"
 name = "types-urllib3"
 version = "1.26.25.4"
 description = "Typing stubs for urllib3"
-category = "main"
+category = "dev"
 optional = false
 python-versions = "*"
 files = [
@@ -2345,4 +2345,4 @@ slack = ["Flask", "slack", "slackeventsapi"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<4"
-content-hash = "720fca5567312b47a09bee4bf6c9e3d97d27808f3490ed8e1c125d4964b92948"
+content-hash = "0b7d3eb7711a50d8e383c26d7d0a767c126b8e24a7712e71a91e9dfdf6f73005"
