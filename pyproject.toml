@@ -30,6 +30,7 @@ tqdm = "^4.64.0"
 ztfquery = "^1.18.4"
 slackclient = {version = "^2.9.4", optional = true}
 gunicorn = {version = "^20.1.0", optional = true}
+lxml = "^4.9.2"
 
 [tool.poetry.dev-dependencies]
 coveralls = "^3.3.1"
