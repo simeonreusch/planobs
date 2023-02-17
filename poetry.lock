@@ -2358,14 +2358,25 @@ multidict = ">=4.0"
 
 [[package]]
 name = "ztfquery"
-version = "1.21.6"
-description = "access ZTF data from python"
+version = "1.24.1"
+description = "Python package to access ZTF data"
 category = "main"
 optional = false
-python-versions = "*"
+python-versions = ">=3.9,<4.0"
 files = [
-    {file = "ztfquery-1.21.6.tar.gz", hash = "sha256:045bc671b2f041d6b63c791bec5254d254dc3dcb28d79bbfcbaf94237b8ebc8e"},
+    {file = "ztfquery-1.24.1-py3-none-any.whl", hash = "sha256:61e4a8077690d067cefa8e51bbf89f84d102cd807173ca14ad317bb4b10a0cc9"},
+    {file = "ztfquery-1.24.1.tar.gz", hash = "sha256:c17f4534ffb1e1818a0bdca9140a3e29cf272ffcc4330c855ae90c13d95c0915"},
 ]
+
+[package.dependencies]
+astropy = ">=5.2.1,<6.0.0"
+matplotlib = ">=3.7.0,<4.0.0"
+numpy = ">=1.24.2,<2.0.0"
+pandas = ">=1.5.3,<2.0.0"
+requests = ">=2.28.2,<3.0.0"
+
+[package.extras]
+dask = ["dask (>=2023.2.0,<2024.0.0)"]
 
 [extras]
 slack = ["Flask", "gunicorn", "slackclient", "slackeventsapi"]
