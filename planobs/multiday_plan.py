@@ -1,22 +1,20 @@
 #!/usr/bin/env python3
-import matplotlib.pyplot as plt  # type: ignore
-import os, logging
-from datetime import datetime, date
+import logging
+import os
+from datetime import date, datetime
 from typing import List
+
 import astropy
-from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
 import numpy as np
-from tqdm import tqdm  # type: ignore
-from astropy.time import Time  # type: ignore
 from astropy import units as u  # type: ignore
+from astropy.time import Time  # type: ignore
+from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
+from tqdm import tqdm  # type: ignore
+
 from planobs.plan import PlanObservation
-from planobs.utils import (
-    round_time,
-    short_time,
-    isotime_delta_to_seconds,
-    isotime_to_mjd,
-    mjd_to_isotime,
-)
+from planobs.utils import (isotime_delta_to_seconds, isotime_to_mjd,
+                           mjd_to_isotime, round_time, short_time)
 
 logger = logging.getLogger(__name__)
 

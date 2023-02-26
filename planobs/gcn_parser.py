@@ -3,12 +3,17 @@
 # GCN parsing code partially by Robert Stein (robert.stein@desy.de)
 # License: BSD-3-Clause
 
-import os, time, re, logging, json
+import json
+import logging
+import os
+import re
+import time
+from typing import List, Optional, Tuple, TypedDict
+
 import numpy as np
 import pandas as pd  # type: ignore
-from astropy.time import Time  # type: ignore
 import requests
-from typing import Tuple, Optional, List, TypedDict
+from astropy.time import Time  # type: ignore
 
 logger = logging.getLogger(__name__)
 

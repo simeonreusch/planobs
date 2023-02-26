@@ -3,22 +3,27 @@
 # GCN parsing code partially by Robert Stein (robert.stein@desy.de)
 # License: BSD-3-Clause
 
-import time, os, warnings, typing, logging
-import astropy  # type: ignore
-from astropy.time import Time  # type: ignore
-from astropy import units as u  # type: ignore
-from astropy.coordinates import SkyCoord, AltAz  # type: ignore
-import os, time, re
-import numpy as np
-import matplotlib.pyplot as plt  # type: ignore
-import pandas as pd  # type: ignore
+import logging
+import os
+import re
+import time
+import typing
+import warnings
+from datetime import datetime
+
 import astroplan as ap  # type: ignore
+import astropy  # type: ignore
+import matplotlib.pyplot as plt  # type: ignore
+import numpy as np
+import pandas as pd  # type: ignore
 from astroplan import Observer, is_observable  # type: ignore
 from astroplan.plots import plot_finder_image  # type: ignore
-from datetime import datetime
 from astroplan.plots import plot_airmass, plot_altitude
-from ztfquery import fields, query  # type: ignore
+from astropy import units as u  # type: ignore
+from astropy.coordinates import AltAz, SkyCoord  # type: ignore
+from astropy.time import Time  # type: ignore
 from shapely.geometry import Polygon  # type: ignore
+from ztfquery import fields, query  # type: ignore
 
 from planobs import gcn_parser, utils
 

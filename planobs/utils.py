@@ -2,20 +2,20 @@
 # Author: Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import re, os, logging, itertools, time
-
-from typing import List, Optional
+import itertools
+import logging
+import os
+import re
+import time
 from io import StringIO
-
-import pandas as pd  # type: ignore
-
-from tqdm import tqdm  # type: ignore
-
-import requests
+from typing import List, Optional
 
 import astropy  # type: ignore
-from astropy.time import Time  # type: ignore
+import pandas as pd  # type: ignore
+import requests
 from astropy import units as u  # type: ignore
+from astropy.time import Time  # type: ignore
+from tqdm import tqdm  # type: ignore
 
 logger = logging.getLogger()
 

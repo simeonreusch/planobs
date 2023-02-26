@@ -4,10 +4,10 @@
 
 import matplotlib.pyplot as plt  # type: ignore
 
-from planobs.plan import PlanObservation, AirmassError, ParsingError
-from planobs.utils import is_ztf_name
-from planobs.multiday_plan import MultiDayObservation
 from planobs.api import Queue
+from planobs.multiday_plan import MultiDayObservation
+from planobs.plan import AirmassError, ParsingError, PlanObservation
+from planobs.utils import is_ztf_name
 
 
 class Slackbot:

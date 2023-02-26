@@ -2,16 +2,19 @@
 # Author: Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import os, datetime, logging
-from astropy.time import Time  # type: ignore
-from astropy import units as u  # type: ignore
+import datetime
+import logging
+import os
 
+from astropy import units as u  # type: ignore
+from astropy.coordinates import EarthLocation  # type: ignore
+from astropy.time import Time  # type: ignore
 from flask import Flask
 from slack import WebClient  # type: ignore
 from slackeventsapi import SlackEventAdapter  # type: ignore
-from slackbot import Slackbot
-from astropy.coordinates import EarthLocation  # type: ignore
+
 from planobs.api import Queue
+from slackbot import Slackbot
 
 planobs_slackbot = Flask(__name__)
 

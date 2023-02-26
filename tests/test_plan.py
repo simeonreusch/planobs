@@ -1,16 +1,15 @@
-import unittest
-import os
 import logging
+import os
 import shutil
 import time
+import unittest
 
 import matplotlib.pyplot as plt
 
-from planobs import credentials
-from planobs.plan import PlanObservation
+from planobs import credentials, gcn_parser
+from planobs.api import APIError, Queue
 from planobs.multiday_plan import MultiDayObservation
-from planobs.api import Queue, APIError
-from planobs import gcn_parser
+from planobs.plan import PlanObservation
 
 logging.getLogger("planobs.api").setLevel(logging.DEBUG)
 

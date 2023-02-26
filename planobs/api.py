@@ -4,11 +4,13 @@
 #    Simeon Reusch (simeon.reusch@desy.de)
 # License: BSD-3-Clause
 
-import os, time, logging, json
-from typing import Union, List, Optional
+import json
+import logging
+import os
+import time
+from typing import List, Optional, Union
 
 from astropy.time import Time
-
 from penquins import Kowalski  # type: ignore
 
 logger = logging.getLogger(__name__)

@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 import logging
+
 import matplotlib.pyplot as plt  # type: ignore
 
-from planobs.plan import PlanObservation
-from planobs.multiday_plan import MultiDayObservation
 from planobs.api import Queue
+from planobs.multiday_plan import MultiDayObservation
+from planobs.plan import PlanObservation
 
 logging.basicConfig()
 logging.getLogger("planobs.plan").setLevel(logging.INFO)
