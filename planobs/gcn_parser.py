@@ -26,6 +26,10 @@ def find_gcn_circular(neutrino_name: str):
         "https://heasarc.gsfc.nasa.gov/wsgi-scripts/tach/gcn_v2/tach.wsgi/graphql_fast"
     )
 
+    # hard code missing entries
+    if base_nu_name == "IC220405B":
+        return 31839
+
     querystr = (
         '{ allEventCard( name: "'
         + neutrino_name
