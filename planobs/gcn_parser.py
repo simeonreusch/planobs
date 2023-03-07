@@ -27,7 +27,7 @@ def find_gcn_circular(neutrino_name: str):
     )
 
     # hard code missing entries
-    if base_nu_name == "IC220405B":
+    if neutrino_name == "IC220405B":
         return 31839
 
     querystr = (
