@@ -22,12 +22,14 @@ from astroplan.plots import plot_airmass, plot_altitude
 from astropy import units as u  # type: ignore
 from astropy.coordinates import AltAz, SkyCoord  # type: ignore
 from astropy.time import Time  # type: ignore
+from matplotlib import rc
 from planobs import gcn_parser, utils
 from shapely.geometry import Polygon  # type: ignore
 from ztfquery import fields, query  # type: ignore
 
 icecube = ["IceCube", "IC", "icecube", "ICECUBE", "Icecube"]
 ztf = ["ZTF", "ztf"]
+rc("font", **{"family": "serif", "serif": ["Palatino"]})
 
 logger = logging.getLogger(__name__)
 
@@ -741,15 +743,16 @@ class PlanObservation:
 
             ax.scatter([self.ra], [self.dec], color="red")
 
-            ax.set_xlabel("RA")
-            ax.set_ylabel("Dec")
+            ax.set_xlabel("RA", fontsize=14)
+            ax.set_ylabel("Dec", fontsize=14)
+            ax.tick_params(axis="both", which="major", labelsize=12)
             if self.ra_err:
-                ax.set_title(f"Field {f} (Coverage: {cov:.2f}%)")
+                ax.set_title(f"Field {f} (Coverage: {cov:.2f}%)", fontsize=16)
             else:
-                ax.set_title(f"Field {f}")
+                ax.set_title(f"Field {f}", fontsize=16)
             plt.tight_layout()
 
-            outpath_png = os.path.join(self.name, f"{self.name}_grid_{f}.png")
+            outpath_png = os.path.join(self.name, f"{self.name}_grid_{f}.pdf")
 
             fig.savefig(outpath_png, dpi=300)
             plt.close()

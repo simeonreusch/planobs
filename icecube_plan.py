@@ -2,7 +2,6 @@
 import logging
 
 import matplotlib.pyplot as plt  # type: ignore
-
 from planobs.api import Queue
 from planobs.multiday_plan import MultiDayObservation
 from planobs.plan import PlanObservation
@@ -13,22 +12,25 @@ logging.getLogger("planobs.gcn_parser").setLevel(logging.INFO)
 
 name = "IC221223A"  # Name of the alert object
 max_airmass = 1.6
+date = "2023-01-13"
 # name = "IC201007A"
 # date = "2022-12-23"  # This is optional, defaults to today
 # ra = 242.58
 # dec = 11.61
 # Now no ra and dec values are given, but alertsource is set to 'icecube'. This enables GCN archive parsing for the alert name. If it is not found, it will use the latest GCN notice (these are automated).
 
-# plan = PlanObservation(
-#     name=name,
-#     alertsource="icecube",
-#     switch_filters=False,
-#     max_airmass=max_airmass,
-# )
-# plan.plot_target()  # Plots the observing conditions
-# plan.request_ztf_fields()  # Checks in which ZTF fields this object is observable
+plan = PlanObservation(
+    name=name,
+    date=date,
+    alertsource="icecube",
+    switch_filters=False,
+    max_airmass=max_airmass,
+)
+plan.plot_target()  # Plots the observing conditions
+plan.request_ztf_fields()  # Checks in which ZTF fields this object is observable
 # # plan.plot_finding_chart()
-# plt.close()
+plt.close()
+quit()
 
 
 # observationplan = MultiDayObservation(
