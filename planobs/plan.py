@@ -22,10 +22,9 @@ from astroplan.plots import plot_airmass, plot_altitude
 from astropy import units as u  # type: ignore
 from astropy.coordinates import AltAz, SkyCoord  # type: ignore
 from astropy.time import Time  # type: ignore
+from planobs import gcn_parser, utils
 from shapely.geometry import Polygon  # type: ignore
 from ztfquery import fields, query  # type: ignore
-
-from planobs import gcn_parser, utils
 
 icecube = ["IceCube", "IC", "icecube", "ICECUBE", "Icecube"]
 ztf = ["ZTF", "ztf"]

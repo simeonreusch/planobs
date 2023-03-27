@@ -10,11 +10,15 @@ import numpy as np
 from astropy import units as u  # type: ignore
 from astropy.time import Time  # type: ignore
 from matplotlib.backends.backend_pdf import PdfPages  # type: ignore
-from tqdm import tqdm  # type: ignore
-
 from planobs.plan import PlanObservation
-from planobs.utils import (isotime_delta_to_seconds, isotime_to_mjd,
-                           mjd_to_isotime, round_time, short_time)
+from planobs.utils import (
+    isotime_delta_to_seconds,
+    isotime_to_mjd,
+    mjd_to_isotime,
+    round_time,
+    short_time,
+)
+from tqdm import tqdm  # type: ignore
 
 logger = logging.getLogger(__name__)
 
@@ -31,7 +35,7 @@ class MultiDayObservation:
         name: str,
         ra: float | None = None,
         dec: float | None = None,
-        startdate=None,
+        startdate: str | None = None,
         max_airmass: float | None = 1.9,
         switch_filters: bool = False,
         verbose: bool = True,
@@ -45,12 +49,10 @@ class MultiDayObservation:
 
         self.triggers: list = []
 
-        today = date.today()
-        now = datetime.now()
-
         if self.ra is None:
             plan_initial = PlanObservation(
                 name=name,
+                date=startdate,
                 alertsource="icecube",
                 max_airmass=self.max_airmass,
                 switch_filters=switch_filters,
@@ -58,6 +60,7 @@ class MultiDayObservation:
         else:
             plan_initial = PlanObservation(
                 name=name,
+                date=startdate,
                 ra=self.ra,
                 dec=self.dec,
                 max_airmass=self.max_airmass,
