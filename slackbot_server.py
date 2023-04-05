@@ -9,12 +9,12 @@ import os
 from astropy import units as u  # type: ignore
 from astropy.coordinates import EarthLocation  # type: ignore
 from astropy.time import Time  # type: ignore
-from flask import Flask
-from slack import WebClient  # type: ignore
-from slackeventsapi import SlackEventAdapter  # type: ignore
 
+from flask import Flask
 from planobs.api import Queue
+from slack import WebClient  # type: ignore
 from slackbot import Slackbot
+from slackeventsapi import SlackEventAdapter  # type: ignore
 
 planobs_slackbot = Flask(__name__)
 
@@ -460,4 +460,4 @@ def message(payload):
 
 
 if __name__ == "__main__":
-    app.run(host="168.119.229.141", port=3000)
+    planobs_slackbot.run(port=4000)
