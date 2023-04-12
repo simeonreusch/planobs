@@ -16,7 +16,9 @@ planobs requires Python 3.10.
 # Installation
 Using Pip: ```pip install planobs```.
 
-Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/planobs```, followed by ```poetry install``` This also gives you access to the Slackbot. Note for ARM-based macs: The install of `fiona` might fail. In that case, consider using a `conda` and issuing `conda install -c conda-forge fiona` before running `poetry`.
+Otherwise, you can clone the repository: ```git clone https://github.com/simeonreusch/planobs```, followed by ```poetry install``` This also gives you access to the Slackbot. 
+
+Note for ARM-based macs: The install of `fiona` might fail if you do not have [gdal](https://gdal.org/) installed. In that case, consider using a `conda` and running `conda install -c conda-forge gdal` before running `poetry install`.
 
 # General usage
 ```python
