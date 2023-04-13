@@ -8,6 +8,7 @@ from planobs.api import Queue
 from planobs.multiday_plan import MultiDayObservation
 from planobs.plan import AirmassError, ParsingError, PlanObservation
 from planobs.utils import is_ztf_name
+from planobs.models import TooTarget
 
 
 class Slackbot:
@@ -96,9 +97,12 @@ class Slackbot:
                             trigger_name=f"ToO_{self.name}",
                             validity_window_start_mjd=trigger["mjd_start"],
                             validity_window_end_mjd=trigger["mjd_end"],
-                            field_id=trigger["field_id"],
-                            filter_id=trigger["filter_id"],
-                            exposure_time=trigger["exposure_time"],
+                            targets=[TooTarget(
+                                field_id=trigger["field_id"],
+                                filter_id=trigger["filter_id"],
+                                exposure_time=trigger["exposure_time"],
+
+                            )]
                         )
                     q.submit_queue()
 

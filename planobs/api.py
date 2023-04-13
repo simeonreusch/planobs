@@ -12,6 +12,8 @@ from typing import List, Optional, Union
 
 from astropy.time import Time
 from penquins import Kowalski  # type: ignore
+from planobs.models import TooRequest, TooTarget, ValidityWindow
+from planobs.credentials import KOWALSKI_API_TOKEN, KOWALSKI_HOST
 
 logger = logging.getLogger(__name__)
 
@@ -31,10 +33,9 @@ class Queue:
     ) -> None:
         self.user = user
         self.protocol: str = "https"
-        self.host: str = os.environ.get("KOWALSKI_HOST", default="localhost")
+        self.host: str = KOWALSKI_HOST
         self.port: int = 443
-        self.api_token: Optional[str] = os.environ.get("KOWALSKI_API_TOKEN")
-
+        self.api_token: Optional[str] = KOWALSKI_API_TOKEN
         self.queue: dict = {}
 
         if self.api_token is None:
@@ -125,55 +126,29 @@ class Queue:
         return returnlist
 
     def add_trigger_to_queue(
-        self,
+        self, targets: list[TooTarget],
         trigger_name: str,
         validity_window_start_mjd: float,
         validity_window_end_mjd: float,
-        field_id: list,
-        filter_id: list,
-        request_id: int = 1,
-        subprogram_name: str = "ToO_Neutrino",
-        exposure_time: int = 30,
-        program_id: int = 2,
-        program_pi: str = "Kulkarni",
     ) -> None:
         """
         Add one trigger (requesting a single observation)
         to the queue (containing all the triggers that will be
-        subbmitted)
+        submitted)
         """
-        if trigger_name[:4] != "ToO_":
-            raise ValueError(
-                f"Trigger names must begin with 'ToO_', but you entered '{trigger_name}'"
-            )
-
-        targets = [
-            {
-                "request_id": request_id,
-                "field_id": field_id,
-                "filter_id": filter_id,
-                "subprogram_name": subprogram_name,
-                "program_pi": program_pi,
-                "program_id": program_id,
-                "exposure_time": exposure_time,
-            }
-        ]
 
         trigger_id = len(self.queue)
 
-        trigger = {
-            trigger_id: {
-                "user": self.user,
-                "queue_name": f"{trigger_name}_{trigger_id}",
-                "queue_type": "list",
-                "validity_window_mjd": [
-                    validity_window_start_mjd,
-                    validity_window_end_mjd,
-                ],
-                "targets": targets,
-            }
-        }
-        self.queue.update(trigger)
+        trigger = TooRequest(
+            user=self.user,
+            queue_name=f"{trigger_name}_{trigger_id}",
+            validity_window_mjd=ValidityWindow(
+                start_mjd=validity_window_start_mjd,
+                end_mjd=validity_window_end_mjd,
+            ).export(),
+            targets=targets,
+        )
+        self.queue.update({trigger_id: trigger.dict()})
 
     def submit_queue(self) -> List[dict]:
         """

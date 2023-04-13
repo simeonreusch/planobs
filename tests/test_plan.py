@@ -10,6 +10,7 @@ from planobs import credentials, gcn_parser
 from planobs.api import APIError, Queue
 from planobs.multiday_plan import MultiDayObservation
 from planobs.plan import PlanObservation
+from planobs.models import TooTarget
 
 logging.getLogger("planobs.api").setLevel(logging.DEBUG)
 
@@ -98,13 +99,17 @@ class TestPlan(unittest.TestCase):
         q = Queue(user="DESY")
 
         for i, trigger in enumerate(triggers):
+            target = TooTarget(
+                request_id=1,
+                field_id=trigger["field_id"],
+                filter_id=trigger["filter_id"],
+                exposure_time=trigger["exposure_time"],
+            )
             q.add_trigger_to_queue(
                 trigger_name=f"ToO_{neutrino_name}",
                 validity_window_start_mjd=trigger["mjd_start"],
                 validity_window_end_mjd=trigger["mjd_end"],
-                field_id=trigger["field_id"],
-                filter_id=trigger["filter_id"],
-                exposure_time=trigger["exposure_time"],
+                targets=[target],
             )
 
         q.print()

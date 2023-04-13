@@ -84,7 +84,8 @@ print(existing_too_requests)
 ## Submitting
 
 ```python
-from planobs.api import Queue
+from planobs.api import Queue, get_too_queues
+from planobs.models import TooTarget
 
 trigger_name = "ToO_IC220513A_test"
 
@@ -95,9 +96,13 @@ q = Queue(user="yourname")
 q.add_trigger_to_queue(
     trigger_name=trigger_name,
     validity_window_start_mjd=59719.309333333334,
-    field_id=427,
-    filter_id=1,
-    exposure_time=300,
+    targets=[
+        TooTarget(
+            field_id=427,
+            filter_id=1,
+            exposure_time=300,
+        )
+    ],
 )
 
 q.submit_queue()
