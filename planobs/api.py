@@ -227,4 +227,7 @@ class Queue:
         """
         Close the connection
         """
-        self.kowalski.close()
+        try:
+            self.kowalski.close()
+        except AttributeError:
+            pass
