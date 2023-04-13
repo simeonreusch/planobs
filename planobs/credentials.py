@@ -9,6 +9,9 @@ from ztfquery import io  # type: ignore
 
 # Manage ztfquery logins from environment variables
 
+KOWALSKI_API_TOKEN = os.environ.get("KOWALSKI_API_TOKEN")
+KOWALSKI_HOST = os.environ.get("KOWALSKI_HOST", "kowalski.caltech.edu")
+
 
 def load_credentials(name: str, token_based: bool = False):
     """ZTFquery wrapper for loading credentials."""
