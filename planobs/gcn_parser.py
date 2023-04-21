@@ -124,9 +124,9 @@ class GCN_Info(TypedDict):
     author: str
     time: Time
     ra: float
-    ra_err: List[Optional[float]]
+    ra_err: List[float | None]
     dec: float
-    dec_err: List[Optional[float]]
+    dec_err: List[float | None]
 
 
 def parse_gcn_circular(gcn_number: int) -> GCN_Info:
@@ -160,6 +160,10 @@ def parse_gcn_circular(gcn_number: int) -> GCN_Info:
         ):
             ra, ra_upper, ra_lower = parse_radec(line)
             dec, dec_upper, dec_lower = parse_radec(splittext[i + 1])
+
+            ra_err: List[Optional[float]]
+            dec_err: List[Optional[float]]
+
             if ra_upper and ra_lower:
                 ra_err = [ra_upper, -ra_lower]
             else:
@@ -169,6 +173,7 @@ def parse_gcn_circular(gcn_number: int) -> GCN_Info:
                 dec_err = [dec_upper, -dec_lower]
             else:
                 dec_err = [None, None]
+
             mainbody_starts_here = i + 2
 
         elif ("Time" in line or "TIME" in line) and i < mainbody_starts_here:
