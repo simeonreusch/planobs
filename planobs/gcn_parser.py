@@ -134,30 +134,32 @@ def parse_gcn_circular(gcn_number: int) -> GCN_Info:
     Parses the handwritten text of a given GCN;
     extracts author, time and RA/Dec (with errors)
     """
-    url = f"https://gcn.gsfc.nasa.gov/gcn3/{gcn_number}.gcn3"
-
-    response = requests.get(url)
     mainbody_starts_here = 999
-    splittext = response.text.splitlines()
+
+    endpoint = f"https://gcn.nasa.gov/circulars/{gcn_number}/json"
+    res = requests.get(endpoint)
+    res_json = res.json()
+
+    subject = res_json.get("subject")
+    submitter = res_json.get("submitter")
+    body = res_json.get("body")
+
+    base = submitter.split("at")[0].split(" ")
+    author = [x for x in base if x != ""][1]
+
+    name = subject.split(" - ")[0]
+
+    splittext = body.splitlines()
     splittext = list(filter(None, splittext))
 
     for i, line in enumerate(splittext):
-        if "SUBJECT" in line:
-            name = line.split(" - ")[0].split(": ")[1]
-        elif "FROM" in line:
-            base = line.split("at")[0].split(": ")[1].split(" ")
-            author = [x for x in base if x != ""][1]
-        elif (
+        if (
             ("RA" in line or "Ra" in line)
             and ("DEC" in splittext[i + 1] or "Dec" in splittext[i + 1])
             and i < mainbody_starts_here
         ):
-            ra, ra_upper, ra_lower = parse_radec(searchstring=line)
-            dec, dec_upper, dec_lower = parse_radec(searchstring=splittext[i + 1])
-
-            ra_err: List[Optional[float]]
-            dec_err: List[Optional[float]]
-
+            ra, ra_upper, ra_lower = parse_radec(line)
+            dec, dec_upper, dec_lower = parse_radec(splittext[i + 1])
             if ra_upper and ra_lower:
                 ra_err = [ra_upper, -ra_lower]
             else:
@@ -167,8 +169,8 @@ def parse_gcn_circular(gcn_number: int) -> GCN_Info:
                 dec_err = [dec_upper, -dec_lower]
             else:
                 dec_err = [None, None]
-
             mainbody_starts_here = i + 2
+
         elif ("Time" in line or "TIME" in line) and i < mainbody_starts_here:
             raw_time = [
                 x for x in line.split(" ") if x not in ["Time", "", "UT", "UTC"]
