@@ -12,8 +12,8 @@ from typing import List, Optional, Union
 
 from astropy.time import Time
 from penquins import Kowalski  # type: ignore
-from planobs.models import TooRequest, TooTarget, ValidityWindow
 from planobs.credentials import KOWALSKI_API_TOKEN, KOWALSKI_HOST
+from planobs.models import TooRequest, TooTarget, ValidityWindow
 
 logger = logging.getLogger(__name__)
 
@@ -126,7 +126,8 @@ class Queue:
         return returnlist
 
     def add_trigger_to_queue(
-        self, targets: list[TooTarget],
+        self,
+        targets: list[TooTarget],
         trigger_name: str,
         validity_window_start_mjd: float,
         validity_window_end_mjd: float,
@@ -189,6 +190,7 @@ class Queue:
 
         for i, trigger in self.queue.items():
             res = results[i]
+            print(res)
             if res["status"] != "success":
                 err = f"something went wrong with deleting the trigger ({trigger['queue_name']})"
 
