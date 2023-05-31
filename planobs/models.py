@@ -2,6 +2,7 @@
 Models for planobs
 """
 from pydantic import BaseModel, Field, validator
+
 # from astropy.time import Time
 
 
@@ -13,6 +14,7 @@ class TooTarget(BaseModel):
     """
     Base class for ToO targets
     """
+
     request_id: int = Field(ge=0, default=1, description="ID of the request")
     field_id: int = Field(description="Field ID")
     filter_id: int = Field(description="Filter ID")
@@ -48,6 +50,7 @@ class ValidityWindow(BaseModel):
     """
     Base class for validity windows
     """
+
     start_mjd: float = Field(description="Start of the validity window in MJD")
     end_mjd: float = Field(description="End of the validity window in MJD")
 
@@ -75,6 +78,7 @@ class TooRequest(BaseModel):
     """
     Base class for ToO requests
     """
+
     user: str = Field(description="User triggering the ToO")
     queue_name: str = Field(description="Name of the ToO", example="ToO_GW170817_1")
     queue_type: str = Field("list")
@@ -90,5 +94,5 @@ class TooRequest(BaseModel):
         :param field_value: field value
         :return: field_value
         """
-        assert field_value[:4] == "ToO_"
+        assert field_value[:4] == "ToO_" or field_value[:5] == "TEST_"
         return field_value

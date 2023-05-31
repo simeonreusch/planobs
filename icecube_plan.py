@@ -10,9 +10,9 @@ logging.basicConfig()
 logging.getLogger("planobs.plan").setLevel(logging.INFO)
 logging.getLogger("planobs.gcn_parser").setLevel(logging.INFO)
 
-name = "IC221223A"  # Name of the alert object
-max_airmass = 1.6
-date = "2023-01-13"
+name = "IC230524A"  # Name of the alert object
+max_airmass = 1.9
+date = "2023-05-24"
 # name = "IC201007A"
 # date = "2022-12-23"  # This is optional, defaults to today
 # ra = 242.58
@@ -27,21 +27,17 @@ plan = PlanObservation(
     max_airmass=max_airmass,
 )
 plan.plot_target()  # Plots the observing conditions
-plan.request_ztf_fields()  # Checks in which ZTF fields this object is observable
-# # plan.plot_finding_chart()
-plt.close()
-quit()
+plan.request_ztf_fields()  # Checks in which ZTF fields
 
+observationplan = MultiDayObservation(
+    name=name, startdate=None, max_airmass=max_airmass, switch_filters=False
+)
+observationplan.print_plan()
+summary = observationplan.summarytext
+print(summary)
 
-# observationplan = MultiDayObservation(
-#     name=name, startdate=None, max_airmass=max_airmass, switch_filters=False
-# )
-# observationplan.print_plan()
-# summary = observationplan.summarytext
-# print(summary)
-
-# triggers = observationplan.triggers
-# print(triggers)
+triggers = observationplan.triggers
+print(triggers)
 
 # q = Queue(user="DESY")
 

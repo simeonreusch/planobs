@@ -5,12 +5,11 @@ import time
 import unittest
 
 import matplotlib.pyplot as plt
-
 from planobs import credentials, gcn_parser
 from planobs.api import APIError, Queue
+from planobs.models import TooTarget
 from planobs.multiday_plan import MultiDayObservation
 from planobs.plan import PlanObservation
-from planobs.models import TooTarget
 
 logging.getLogger("planobs.api").setLevel(logging.DEBUG)
 
@@ -106,7 +105,7 @@ class TestPlan(unittest.TestCase):
                 exposure_time=trigger["exposure_time"],
             )
             q.add_trigger_to_queue(
-                trigger_name=f"ToO_{neutrino_name}",
+                trigger_name=f"TEST",
                 validity_window_start_mjd=trigger["mjd_start"],
                 validity_window_end_mjd=trigger["mjd_end"],
                 targets=[target],
@@ -121,7 +120,7 @@ class TestPlan(unittest.TestCase):
                 0,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_0",
+                    "queue_name": "TEST_0",
                     "queue_type": "list",
                     "validity_window_mjd": [59702.399305555555, 59702.42638888889],
                     "targets": [
@@ -141,7 +140,7 @@ class TestPlan(unittest.TestCase):
                 1,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_1",
+                    "queue_name": "TEST_1",
                     "queue_type": "list",
                     "validity_window_mjd": [59703.396527777775, 59703.464583333334],
                     "targets": [
@@ -161,7 +160,7 @@ class TestPlan(unittest.TestCase):
                 2,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_2",
+                    "queue_name": "TEST_2",
                     "queue_type": "list",
                     "validity_window_mjd": [59704.39375, 59704.46319444444],
                     "targets": [
@@ -181,7 +180,7 @@ class TestPlan(unittest.TestCase):
                 3,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_3",
+                    "queue_name": "TEST_3",
                     "queue_type": "list",
                     "validity_window_mjd": [59706.388194444444, 59706.461805555555],
                     "targets": [
@@ -201,7 +200,7 @@ class TestPlan(unittest.TestCase):
                 4,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_4",
+                    "queue_name": "TEST_4",
                     "queue_type": "list",
                     "validity_window_mjd": [59708.38263888889, 59708.46041666667],
                     "targets": [
@@ -221,7 +220,7 @@ class TestPlan(unittest.TestCase):
                 5,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_5",
+                    "queue_name": "TEST_5",
                     "queue_type": "list",
                     "validity_window_mjd": [59710.37708333333, 59710.41180555556],
                     "targets": [
@@ -241,7 +240,7 @@ class TestPlan(unittest.TestCase):
                 6,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_6",
+                    "queue_name": "TEST_6",
                     "queue_type": "list",
                     "validity_window_mjd": [59702.43819444445, 59702.46527777778],
                     "targets": [
@@ -261,7 +260,7 @@ class TestPlan(unittest.TestCase):
                 7,
                 {
                     "user": "DESY",
-                    "queue_name": "ToO_IC220501A_7",
+                    "queue_name": "TEST_7",
                     "queue_type": "list",
                     "validity_window_mjd": [59710.42361111111, 59710.458333333336],
                     "targets": [
@@ -301,7 +300,7 @@ class TestPlan(unittest.TestCase):
             current_too_queue["data"][i]["queue_name"]
             for i in range(len(current_too_queue["data"]))
         ]
-        expected_list = [f"ToO_IC220501A_{i}" for i in range(8)]
+        expected_list = [f"TEST_{i}" for i in range(8)]
 
         # All triggers should be submitted
         for t in expected_list:
