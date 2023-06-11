@@ -21,7 +21,7 @@ astroplan = ">=0.7"
 astropy = "^5.0"
 Flask = {version = "^2.1.3", optional = true}
 geopandas = ">=0.11,<0.14"
-pandas = "^1.4.3"
+pandas = "^2.0.0"
 penquins = "^2.2.0"
 matplotlib = "^3.5.2"
 Shapely = ">=1.8.2,<3.0.0"
