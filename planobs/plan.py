@@ -201,8 +201,8 @@ class PlanObservation:
         moon_coords = []
 
         for time in moon_times:
-            moon_coord = astropy.coordinates.get_moon(
-                time=time, location=self.site.location
+            moon_coord = astropy.coordinates.get_body(
+                "moon", time=time, location=self.site.location
             )
             moon_coords.append(moon_coord)
         self.moon = moon_coords
