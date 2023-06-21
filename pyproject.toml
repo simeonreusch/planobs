@@ -39,7 +39,7 @@ coveralls = ">=3.3.1"
 pytest = ">=7.3.2"
 types-requests = "^2.31.0.1"
 black = ">=23.1.0"
-mypy = ">=0.991,<1.4"
+mypy = ">=0.991,<1.5"
 
 [tool.poetry.extras]
 slack = ["Flask", "gunicorn", "slackclient", "slackeventsapi"]
