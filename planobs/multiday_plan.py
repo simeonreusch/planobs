@@ -19,6 +19,7 @@ from planobs.utils import (
     short_time,
 )
 from tqdm import tqdm  # type: ignore
+from ztfquery.fields import get_field_centroid
 
 logger = logging.getLogger(__name__)
 
@@ -38,10 +39,12 @@ class MultiDayObservation:
         startdate: str | None = None,
         max_airmass: float | None = 1.9,
         switch_filters: bool = False,
+        fieldid: int | None = None,
         verbose: bool = True,
         **kwargs,
     ):
         self.name = name
+
         self.ra = ra
         self.dec = dec
 
@@ -95,6 +98,10 @@ class MultiDayObservation:
         else:
             recommended_field = np.min(plan_initial.fieldids_ref)
             logger.warn("No error on RA/Dec available, choosing the primary grid field")
+
+        if self.ra is None and self.dec is None:
+            if fieldid is not None:
+                recommended_field = fieldid
 
         pdf_outfile = os.path.join(name, f"{name}_multiday.pdf")
 
