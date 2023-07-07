@@ -19,7 +19,6 @@ from planobs.utils import (
     short_time,
 )
 from tqdm import tqdm  # type: ignore
-from ztfquery.fields import get_field_centroid
 
 logger = logging.getLogger(__name__)
 
