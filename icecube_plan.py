@@ -12,31 +12,33 @@ logging.basicConfig()
 logging.getLogger("planobs.plan").setLevel(logging.INFO)
 logging.getLogger("planobs.gcn_parser").setLevel(logging.INFO)
 
-name = "IC230707A"  # Name of the alert object
+name = "IC230823A"  # Name of the alert object
 max_airmass = 1.9
-date = "2023-07-08"
+# date = "2023-08-23"
 
 plan = PlanObservation(
     name=name,
-    date=date,
+    # date=date,
     alertsource="icecube",
     switch_filters=False,
     max_airmass=max_airmass,
+    obswindow=8,
 )
 plan.plot_target()  # Plots the observing conditions
 plan.request_ztf_fields()  # Checks in which ZTF fields
 
+
 observationplan = MultiDayObservation(
     name=name,
     # date=date,
-    startdate=date,
+    # startdate=date,
+    obswindow=8,
     max_airmass=max_airmass,
     switch_filters=False,
-    fieldid=434,  # if you want to override recommended field
+    # fieldid=434,  # if you want to override recommended field
 )
 observationplan.print_plan()
 summary = observationplan.summarytext
-
 
 triggers = observationplan.triggers
 
