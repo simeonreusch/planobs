@@ -750,7 +750,7 @@ class PlanObservation:
                 ax.set_title(f"Field {f}", fontsize=16)
             plt.tight_layout()
 
-            outpath_png = os.path.join(self.name, f"{self.name}_grid_{f}.pdf")
+            outpath_png = os.path.join(self.name, f"{self.name}_grid_{f}.png")
 
             fig.savefig(outpath_png, dpi=300)
             plt.close()
