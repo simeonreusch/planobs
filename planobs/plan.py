@@ -56,6 +56,7 @@ class PlanObservation:
         bands: list = ["g", "r"],
         multiday: bool = False,
         alertsource: str | None = None,
+        obswindow: float = 24,
         site: str | Observer = "Palomar",
         switch_filters: bool = False,
         verbose: bool = True,
@@ -67,6 +68,7 @@ class PlanObservation:
         self.site = site
         self.max_airmass = max_airmass
         self.observationlength = observationlength
+        self.obswindow = obswindow
         self.bands = bands
         self.multiday = multiday
         self.switch_filters = switch_filters
@@ -187,7 +189,11 @@ class PlanObservation:
         else:
             self.start_obswindow = Time(self.now, format="iso")
 
-        self.end_obswindow = Time(self.start_obswindow.mjd + 1, format="mjd").iso
+        obswindow_frac = self.obswindow / 24
+
+        self.end_obswindow = Time(
+            self.start_obswindow.mjd + obswindow_frac, format="mjd"
+        ).iso
 
         constraints = [
             ap.AltitudeConstraint(20 * u.deg, 90 * u.deg),
@@ -196,8 +202,13 @@ class PlanObservation:
         ]
 
         # Obtain moon coordinates at Palomar for the full time window (default: 24 hours from running the script)
-        times = Time(self.start_obswindow + np.linspace(0, 24, 1440) * u.hour)
-        moon_times = Time(self.start_obswindow + np.linspace(0, 24, 50) * u.hour)
+        times = Time(
+            self.start_obswindow + np.linspace(0, self.obswindow, 1440) * u.hour
+        )
+
+        moon_times = Time(
+            self.start_obswindow + np.linspace(0, self.obswindow, 50) * u.hour
+        )
         moon_coords = []
 
         for time in moon_times:
