@@ -18,6 +18,7 @@ class Slackbot:
         ra: float | None = None,
         dec: float | None = None,
         max_airmass: float = 1.9,
+        obswindow: float | None = 24,
         date=None,
         multiday: bool = False,
         submit_trigger=False,
@@ -31,6 +32,7 @@ class Slackbot:
         self.dec = dec
         self.date = date
         self.max_airmass = max_airmass
+        self.obswindow = obswindow
         self.multiday = multiday
         self.submit_trigger = submit_trigger
         self.alertsource = alertsource
@@ -49,6 +51,7 @@ class Slackbot:
                 dec=self.dec,
                 date=self.date,
                 max_airmass=self.max_airmass,
+                obswindow=self.obswindow,
                 multiday=self.multiday,
                 alertsource=self.alertsource,
                 site=self.site,
@@ -79,6 +82,7 @@ class Slackbot:
                     ra=self.ra,
                     dec=self.dec,
                     max_airmass=self.max_airmass,
+                    obswindow=self.obswindow,
                     startdate=self.date,
                     switch_filters=self.switch_filters,
                 )
