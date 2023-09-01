@@ -26,7 +26,7 @@ plan = PlanObservation(
 )
 plan.plot_target()  # Plots the observing conditions
 plan.request_ztf_fields()  # Checks in which ZTF fields
-
+quit()
 
 observationplan = MultiDayObservation(
     name=name,
