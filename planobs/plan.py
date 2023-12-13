@@ -53,6 +53,7 @@ class PlanObservation:
         date: str | None = None,
         max_airmass=1.9,
         observationlength: float = 300,
+        separation_time: int = 8,
         bands: list = ["g", "r"],
         multiday: bool = False,
         alertsource: str | None = None,
@@ -68,6 +69,7 @@ class PlanObservation:
         self.site = site
         self.max_airmass = max_airmass
         self.observationlength = observationlength
+        self.separation_time = separation_time
         self.obswindow = obswindow
         self.bands = bands
         self.multiday = multiday
@@ -269,9 +271,17 @@ class PlanObservation:
             self.observable = False
             self.rejection_reason = "airmass"
 
+        obs_time_minutes = len(bands) * self.observationlength / 60 + (len(bands) - 1) * self.separation_time
+        if len(times_included) < obs_time_minutes:
+            self.observable = False
+            self.rejection_reason = "not enough observation time"
+
         if np.abs(self.coordinates_galactic.b.deg) < 10:
             self.observable = False
             self.rejection_reason = "proximity to gal. plane"
+
+        if not self.observable:
+            logger.info(f"{self.name} is not observable because of {self.rejection_reason}")
 
         if self.ra_err:
             self.calculate_area()
@@ -304,10 +314,10 @@ class PlanObservation:
                     u.min
                 )
 
-                # Create two blocks, separated by 2*8 minutes
+                # Create two blocks, separated by self.separation_time minutes
                 divider = int(len(times_included) / 2)
-                obsblock_1 = times_included[0 : divider - 8]
-                obsblock_2 = times_included[divider + 8 :]
+                obsblock_1 = times_included[0 : divider - self.separation_time]
+                obsblock_2 = times_included[divider + self.separation_time :]
 
                 if distance_to_morning < distance_to_evening:
                     g_band_obsblock = obsblock_1
