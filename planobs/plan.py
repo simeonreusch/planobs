@@ -651,6 +651,7 @@ class PlanObservation:
             outpath_pdf = os.path.join(
                 self.name, f"{self.name}_airmass_{self.site.name}.pdf"
             )
+        logger.info(f"Saving plot to {outpath_png}")
         plt.savefig(outpath_png, dpi=300, bbox_inches="tight")
         plt.savefig(outpath_pdf, bbox_inches="tight")
 
