@@ -272,6 +272,7 @@ class PlanObservation:
             self.rejection_reason = "airmass"
 
         obs_time_minutes = len(bands) * self.observationlength / 60 + (len(bands) - 1) * self.separation_time
+        logger.debug(f"require {obs_time_minutes} minutes, {len(times_included)} available")
         if len(times_included) < obs_time_minutes:
             self.observable = False
             self.rejection_reason = "not enough observation time"
@@ -316,6 +317,7 @@ class PlanObservation:
 
                 # Create two blocks, separated by self.separation_time minutes
                 divider = int(len(times_included) / 2)
+                logger.debug(f"divider is {divider}")
                 obsblock_1 = times_included[0 : divider - self.separation_time]
                 obsblock_2 = times_included[divider + self.separation_time :]
 
@@ -325,6 +327,8 @@ class PlanObservation:
                 else:
                     g_band_obsblock = obsblock_2
                     r_band_obsblock = obsblock_1
+
+                logger.debug(f"g: {len(g_band_obsblock)} min, r: {len(r_band_obsblock)} min")
 
                 self.g_band_recommended_time_start = utils.round_time(
                     g_band_obsblock[0]
