@@ -202,8 +202,10 @@ class PlanObservation:
         ]
 
         # Obtain moon coordinates at Palomar for the full time window (default: 24 hours from running the script)
+        # later we will implicitly assume the time steps to be 1 minute so make sure that is the case
+        time_step = int(self.obswindow * 60)
         times = Time(
-            self.start_obswindow + np.linspace(0, self.obswindow, 1440) * u.hour
+            self.start_obswindow + np.linspace(0, self.obswindow, time_step) * u.hour
         )
 
         moon_times = Time(
