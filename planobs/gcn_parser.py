@@ -219,7 +219,7 @@ def parse_radec(searchstring: str) -> Tuple[float, Optional[float], Optional[flo
     else:
         raise ParsingError(f"Could not parse GCN RA and Dec")
 
-    logger.debug(pos, pos_upper, pos_lower)
+    logger.debug((pos, pos_upper, pos_lower))
 
     return pos, pos_upper, pos_lower
 
@@ -241,7 +241,7 @@ def parse_latest_gcn_notice() -> dict:
     energy = latest["OBSERVATION"]["Energy"][0]
     arrivaltime = Time(f"20{date} {obstime}")
 
-    logger.debug(ra, dec, arrivaltime, revision)
+    logger.debug((ra, dec, arrivaltime, revision))
 
     return {
         "ra": ra,
