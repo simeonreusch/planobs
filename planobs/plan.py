@@ -17,14 +17,18 @@ import matplotlib.pyplot as plt  # type: ignore
 import numpy as np
 import pandas as pd  # type: ignore
 from astroplan import Observer, is_observable  # type: ignore
-from astroplan.plots import plot_finder_image  # type: ignore
-from astroplan.plots import plot_airmass, plot_altitude
+from astroplan.plots import (
+    plot_airmass,
+    plot_altitude,
+    plot_finder_image,  # type: ignore
+)
 from astropy import units as u  # type: ignore
 from astropy.coordinates import AltAz, SkyCoord  # type: ignore
 from astropy.time import Time  # type: ignore
-from planobs import gcn_parser, utils
 from shapely.geometry import Polygon  # type: ignore
 from ztfquery import fields, query  # type: ignore
+
+from planobs import gcn_parser, utils
 
 icecube = ["IceCube", "IC", "icecube", "ICECUBE", "Icecube"]
 ztf = ["ZTF", "ztf"]
