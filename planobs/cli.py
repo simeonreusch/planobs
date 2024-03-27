@@ -26,52 +26,32 @@ def callback(logging_level: str = "INFO"):
 # -----------------------------------------------------------------
 # Queue commands
 
-
-queue_app = typer.Typer()
-
-
-@queue_app.command("too")
-def check_too_queue(username: str):
+@app.command("queue")
+def check_queue(username: str, which: str = "too"):
     """
-    Check the ToO queue for a given user
+    Check queue for a given user
     """
-    typer.echo(f"Checking ToO queue for {username}")
-
+    typer.echo(f"Checking {which} queues for {username}")
     q = Queue(user=username)
-    existing_too_queue = q.get_too_queues_name_and_date()
-    queue = ""
-    for entry in existing_too_queue:
-        queue += f"{entry}\n"
-    queue = queue[:-1]
-
-    if len(queue) == 0:
-        message = "Currently, no ToO triggers are in the ZTF observation queue."
-    else:
-        message = f"The current ZTF ToO observation queue:\n{queue}"
-
-    typer.echo(message)
-
-
-@queue_app.command("all")
-def check_all_queues(username: str):
-    """
-    Check all queues for a given user
-    """
-    typer.echo(f"Checking all queues for {username}")
-    queue = "\n".join(Queue(user=username).get_all_queues_nameonly())
+    match which:
+        case "too":
+            response = q.get_too_queues_name_and_date()
+        case "all":
+            response = q.get_all_queues_nameonly()
+        case _:
+            raise ValueError(f"Invalid queue type: {which}")
+    queue = "\n".join(response)
     if len(queue) == 0:
         message = "Currently, no triggers are in the ZTF observation queue."
     else:
         message = f"The current ZTF observation queue:\n{queue}"
     typer.echo(message)
 
-
 # Queue commands
 # -----------------------------------------------------------------
 
 
 def main():
-    app.add_typer(queue_app, name="queue")
     app()
 
 
