@@ -1,6 +1,8 @@
 import logging
 import typer
+from typing_extensions import Annotated
 from planobs.api import Queue
+from planobs.slackbot import Slackbot
 
 
 logger = logging.getLogger(__name__)
@@ -14,7 +16,7 @@ app = typer.Typer()
 
 
 @app.callback()
-def callback(logging_level: str = "INFO"):
+def callback(logging_level: Annotated[str, typer.Option("--logging-level", "-l")] = "INFO"):
     logging.basicConfig(level=logging.getLevelName(logging_level))
     logging.getLogger("planobs").setLevel(logging.getLevelName(logging_level))
 
@@ -24,7 +26,42 @@ def callback(logging_level: str = "INFO"):
 
 
 # -----------------------------------------------------------------
+# Plan commands
+
+
+@app.command()
+def plan(
+        name: str,
+        trigger: bool = False,
+        multiday: bool = False,
+        alertsource: str = "icecube",
+        site: str = "Palomar"
+):
+    """
+    Plan an observation and submit to the queue
+    """
+    slackbot = Slackbot(
+        channel="",
+        name=name,
+        submit_trigger=trigger,
+        multiday=multiday,
+        alertsource=alertsource,
+        site=site
+    )
+    slackbot.create_plot()
+    typer.echo(slackbot.summary)
+    if multiday:
+        typer.echo("Multiday plan")
+        typer.echo(slackbot.multiday_summary)
+
+
+# Plan commands
+# -----------------------------------------------------------------
+
+
+# -----------------------------------------------------------------
 # Queue commands
+
 
 @app.command("queue")
 def check_queue(username: str, which: str = "too"):
@@ -46,6 +83,7 @@ def check_queue(username: str, which: str = "too"):
     else:
         message = f"The current ZTF observation queue:\n{queue}"
     typer.echo(message)
+
 
 # Queue commands
 # -----------------------------------------------------------------
