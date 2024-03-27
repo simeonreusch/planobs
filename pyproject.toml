@@ -44,6 +44,10 @@ mypy = ">=0.991,<1.4"
 
 [tool.poetry.extras]
 slack = ["Flask", "gunicorn", "slackclient", "slackeventsapi"]
+cli = ["typer"]
+
+[tool.poetry.scripts]
+planobs = "planobs.cli:main"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
