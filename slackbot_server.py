@@ -12,7 +12,7 @@ from astropy.time import Time  # type: ignore
 from flask import Flask
 from planobs.api import Queue
 from slack import WebClient  # type: ignore
-from slackbot import Slackbot
+from planobs.slackbot import Slackbot
 from slackeventsapi import SlackEventAdapter  # type: ignore
 
 planobs_slackbot = Flask(__name__)
