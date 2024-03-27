@@ -40,6 +40,15 @@ def plan(
     """
     Plan an observation and submit to the queue
     """
+
+    if trigger:
+        # asking the user to confirm the trigger submission
+        typer.echo("Submitting trigger to the queue, are you sure? [y/n]")
+        response = input()
+        if response.lower() != "y":
+            typer.echo("Exiting without submitting trigger.")
+            return
+
     slackbot = Slackbot(
         channel="",
         name=name,
