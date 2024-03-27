@@ -1,5 +1,8 @@
 import logging
-import typer
+try:
+    import typer
+except (ImportError, ModuleNotFoundError):
+    raise ImportError("Please install typer if you want to use the CLI: poetry install -E cli")
 from typing_extensions import Annotated
 from planobs.api import Queue
 from planobs.slackbot import Slackbot
