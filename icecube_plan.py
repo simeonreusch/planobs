@@ -3,7 +3,6 @@ import logging
 
 import matplotlib.pyplot as plt  # type: ignore
 from astropy.time import Time  # type:ignore
-
 from planobs.api import Queue
 from planobs.models import TooTarget
 from planobs.multiday_plan import MultiDayObservation
@@ -64,4 +63,4 @@ for i, trigger in enumerate(triggers):
         )
 
 q.print()
-q.submit_queue()  # uncomment to submit for real
+# q.submit_queue()  # uncomment to submit for real
