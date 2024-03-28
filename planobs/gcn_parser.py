@@ -2,12 +2,10 @@
 # Author: Simeon Reusch (simeon.reusch@desy.de)
 # GCN parsing code partially by Robert Stein (robert.stein@desy.de)
 # License: BSD-3-Clause
-
 import json
 import logging
-import os
 import re
-import time
+from io import StringIO
 from typing import List, Optional, Tuple, TypedDict
 
 import numpy as np
@@ -229,7 +227,7 @@ def parse_latest_gcn_notice() -> dict:
     url = "https://gcn.gsfc.nasa.gov/amon_icecube_gold_bronze_events.html"
 
     response = requests.get(url)
-    table = pd.read_html(response.text)[0]
+    table = pd.read_html(StringIO(response.text))[0]
 
     latest = table.head(1)
     revision = latest["EVENT"]["Rev"][0]
