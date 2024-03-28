@@ -1,12 +1,13 @@
 import logging
+
 try:
     import typer
 except (ImportError, ModuleNotFoundError):
-    raise ImportError("Please install typer if you want to use the CLI: poetry install -E cli")
+    raise ImportError("Please install typer if you want to use the CLI")
 from typing_extensions import Annotated
+
 from planobs.api import Queue
 from planobs.slackbot import Slackbot
-
 
 logger = logging.getLogger(__name__)
 
@@ -19,7 +20,9 @@ app = typer.Typer()
 
 
 @app.callback()
-def callback(logging_level: Annotated[str, typer.Option("--logging-level", "-l")] = "INFO"):
+def callback(
+    logging_level: Annotated[str, typer.Option("--logging-level", "-l")] = "INFO"
+):
     logging.basicConfig(level=logging.getLevelName(logging_level))
     logging.getLogger("planobs").setLevel(logging.getLevelName(logging_level))
 
@@ -34,11 +37,11 @@ def callback(logging_level: Annotated[str, typer.Option("--logging-level", "-l")
 
 @app.command()
 def plan(
-        name: str,
-        trigger: bool = False,
-        multiday: bool = False,
-        alertsource: str = "icecube",
-        site: str = "Palomar"
+    name: str,
+    trigger: bool = False,
+    multiday: bool = False,
+    alertsource: str = "icecube",
+    site: str = "Palomar",
 ):
     """
     Plan an observation and submit to the queue
@@ -58,7 +61,7 @@ def plan(
         submit_trigger=trigger,
         multiday=multiday,
         alertsource=alertsource,
-        site=site
+        site=site,
     )
     slackbot.create_plot()
     typer.echo(slackbot.summary)

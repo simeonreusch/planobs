@@ -5,9 +5,6 @@
 
 import logging
 import os
-import re
-import time
-import typing
 import warnings
 from datetime import datetime
 
@@ -16,9 +13,8 @@ import astropy  # type: ignore
 import matplotlib.pyplot as plt  # type: ignore
 import numpy as np
 import pandas as pd  # type: ignore
-from astroplan import Observer, is_observable  # type: ignore
+from astroplan import Observer  # type: ignore
 from astroplan.plots import (
-    plot_airmass,
     plot_altitude,
     plot_finder_image,  # type: ignore
 )
@@ -97,8 +93,6 @@ class PlanObservation:
 
             # check if name is correct
             assert utils.is_icecube_name(self.name)
-
-            test = gcn_parser.parse_latest_gcn_notice()
 
             gcn_nr = gcn_parser.find_gcn_circular(neutrino_name=self.name)
             notice = gcn_parser.parse_latest_gcn_notice()
@@ -201,12 +195,6 @@ class PlanObservation:
             self.start_obswindow.mjd + obswindow_frac, format="mjd"
         ).iso
 
-        constraints = [
-            ap.AltitudeConstraint(20 * u.deg, 90 * u.deg),
-            ap.AirmassConstraint(self.max_airmass),
-            ap.AtNightConstraint.twilight_astronomical(),
-        ]
-
         # Obtain moon coordinates at Palomar for the full time window (default: 24 hours from running the script)
         # later we will implicitly assume the time steps to be 1 minute so make sure that is the case
         time_step = int(self.obswindow * 60)
@@ -275,8 +263,13 @@ class PlanObservation:
             self.observable = False
             self.rejection_reason = "airmass"
 
-        obs_time_minutes = len(bands) * self.observationlength / 60 + (len(bands) - 1) * self.separation_time
-        logger.debug(f"require {obs_time_minutes} minutes, {len(times_included)} available")
+        obs_time_minutes = (
+            len(bands) * self.observationlength / 60
+            + (len(bands) - 1) * self.separation_time
+        )
+        logger.debug(
+            f"require {obs_time_minutes} minutes, {len(times_included)} available"
+        )
         if len(times_included) < obs_time_minutes:
             self.observable = False
             self.rejection_reason = "not enough observation time"
@@ -286,7 +279,9 @@ class PlanObservation:
             self.rejection_reason = "proximity to gal. plane"
 
         if not self.observable:
-            logger.info(f"{self.name} is not observable because of {self.rejection_reason}")
+            logger.info(
+                f"{self.name} is not observable because of {self.rejection_reason}"
+            )
 
         if self.ra_err:
             self.calculate_area()
@@ -315,9 +310,6 @@ class PlanObservation:
             # now we divide in two blocks of time if there are two bands required
 
             if len(self.bands) == 2:
-                obs_window_length_min = (times_included[-1] - times_included[0]).to(
-                    u.min
-                )
 
                 # Create two blocks, separated by self.separation_time minutes
                 divider = int(len(times_included) / 2)
@@ -332,7 +324,9 @@ class PlanObservation:
                     g_band_obsblock = obsblock_2
                     r_band_obsblock = obsblock_1
 
-                logger.debug(f"g: {len(g_band_obsblock)} min, r: {len(r_band_obsblock)} min")
+                logger.debug(
+                    f"g: {len(g_band_obsblock)} min, r: {len(r_band_obsblock)} min"
+                )
 
                 self.g_band_recommended_time_start = utils.round_time(
                     g_band_obsblock[0]
@@ -683,7 +677,6 @@ class PlanObservation:
         if self.gcn_fail("field retrieval"):
             return None
 
-        radius = 0
         fieldids = list(fields.get_fields_containing_target(ra=self.ra, dec=self.dec))
         fieldids_ref = []
 
@@ -708,7 +701,7 @@ class PlanObservation:
             if len(mt) > 0:
                 for f in mt.field.unique():
                     d = {k: k in mt["filtercode"].values for k in ["zg", "zr", "zi"]}
-                    if d["zg"] == True and d["zr"] == True:
+                    if d["zg"] and d["zr"]:
                         fieldids_ref.append(int(f))
 
         logger.info(f"Fields that contain target: {fieldids}")

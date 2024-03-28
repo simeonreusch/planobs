@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 import logging
 
-import matplotlib.pyplot as plt  # type: ignore
 from astropy.time import Time  # type:ignore
 from planobs.api import Queue
 from planobs.models import TooTarget
