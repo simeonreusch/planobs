@@ -732,11 +732,9 @@ class PlanObservation:
         self.coverage = coverage
         self.distance = distance
 
-        if len(self.coverage) > 0:
+        if self.ra_err and len(self.coverage) > 0:  # if ra_err is not available, we can't calculate coverage
             max_coverage_field = max(self.coverage, key=self.coverage.get)
-
             self.recommended_field = max_coverage_field
-
         else:
             # no errors -> no coverage -> let's use the more central field
             self.recommended_field = min(self.distance, key=self.distance.get)
