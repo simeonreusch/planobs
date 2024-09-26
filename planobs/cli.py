@@ -42,6 +42,7 @@ def plan(
     multiday: bool = False,
     alertsource: str = "icecube",
     site: str = "Palomar",
+    date: Annotated[str, typer.Option(help="Starting date of planned observation, defaults to today")] = None,
 ):
     """
     Plan an observation and submit to the queue
@@ -62,6 +63,7 @@ def plan(
         multiday=multiday,
         alertsource=alertsource,
         site=site,
+        date=date,
     )
     slackbot.create_plot()
     typer.echo(slackbot.summary)
