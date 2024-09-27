@@ -718,79 +718,78 @@ class PlanObservation:
         """
         Plot the ZTF field(s) with the target
         """
-        ccds = fields._CCD_COORDS
-
         coverage = {}
         distance = {}
 
         for f in self.fieldids_ref:
-            centroid = fields.get_field_centroid(f)
-            centroid_coords = SkyCoord(
-                centroid[0][0] * u.deg, centroid[0][1] * u.deg, frame="icrs"
-            )
-            dist_to_target = self.coordinates.separation(centroid_coords).deg
+            fig, ax, dist_to_target, cov = self.plot_field(f)
             distance.update({f: dist_to_target})
-
-            fig, ax = plt.subplots(dpi=300)
-
-            ax.set_aspect("equal")
-
-            ccd_polygons = []
-            covered_area = 0
-
-            for c in ccds.CCD.unique():
-                ccd = ccds[ccds.CCD == c][["EW", "NS"]].values
-                ccd_draw = Polygon(ccd + centroid)
-                ccd_polygons.append(ccd_draw)
-                x, y = ccd_draw.exterior.xy
-                ax.plot(x, y, color="black")
-
-            if self.ra_err:
-                # Create errorbox
-                ul = [self.ra + self.ra_err[1], self.dec + self.dec_err[0]]
-                ur = [self.ra + self.ra_err[0], self.dec + self.dec_err[1]]
-                ll = [self.ra + self.ra_err[1], self.dec + self.dec_err[1]]
-                lr = [self.ra + self.ra_err[0], self.dec + self.dec_err[0]]
-
-                errorbox = Polygon([ul, ll, ur, lr])
-                x, y = errorbox.exterior.xy
-
-                ax.plot(x, y, color="red")
-
-                for ccd in ccd_polygons:
-                    covered_area += errorbox.intersection(ccd).area
-
-                cov = covered_area / errorbox.area * 100
-
-                coverage.update({f: cov})
-
-            ax.scatter([self.ra], [self.dec], color="red")
-
-            ax.set_xlabel("RA", fontsize=14)
-            ax.set_ylabel("Dec", fontsize=14)
-            ax.tick_params(axis="both", which="major", labelsize=12)
-            if self.ra_err:
-                ax.set_title(f"Field {f} (Coverage: {cov:.2f}%)", fontsize=16)
-            else:
-                ax.set_title(f"Field {f}", fontsize=16)
-            plt.tight_layout()
-
+            coverage.update({f: cov})
             outpath_png = os.path.join(self.name, f"{self.name}_grid_{f}.png")
-
             fig.savefig(outpath_png, dpi=300)
             plt.close()
 
         self.coverage = coverage
         self.distance = distance
 
-        if len(self.coverage) > 0:
+        if self.ra_err and len(self.coverage) > 0:  # if ra_err is not available, we can't calculate coverage
             max_coverage_field = max(self.coverage, key=self.coverage.get)
-
             self.recommended_field = max_coverage_field
-
         else:
             # no errors -> no coverage -> let's use the more central field
             self.recommended_field = min(self.distance, key=self.distance.get)
+
+    def plot_field(self, f):
+        centroid = fields.get_field_centroid(f)
+        centroid_coords = SkyCoord(
+            centroid[0][0] * u.deg, centroid[0][1] * u.deg, frame="icrs"
+        )
+
+        fig, ax = plt.subplots(dpi=300)
+
+        ax.set_aspect("equal")
+
+        ccd_polygons = []
+        covered_area = 0
+
+        ccds = fields._CCD_COORDS
+        for c in ccds.CCD.unique():
+            ccd = ccds[ccds.CCD == c][["EW", "NS"]].values
+            ccd_draw = Polygon(ccd + centroid)
+            ccd_polygons.append(ccd_draw)
+            x, y = ccd_draw.exterior.xy
+            ax.plot(x, y, color="black")
+
+        cov = None
+        if self.ra_err:
+            # Create errorbox
+            ul = [self.ra + self.ra_err[1], self.dec + self.dec_err[0]]
+            ur = [self.ra + self.ra_err[0], self.dec + self.dec_err[1]]
+            ll = [self.ra + self.ra_err[1], self.dec + self.dec_err[1]]
+            lr = [self.ra + self.ra_err[0], self.dec + self.dec_err[0]]
+
+            errorbox = Polygon([ul, ll, ur, lr])
+            x, y = errorbox.exterior.xy
+
+            ax.plot(x, y, color="red")
+
+            for ccd in ccd_polygons:
+                covered_area += errorbox.intersection(ccd).area
+
+            cov = covered_area / errorbox.area * 100
+
+        ax.scatter([self.ra], [self.dec], color="red")
+
+        ax.set_xlabel("RA", fontsize=14)
+        ax.set_ylabel("Dec", fontsize=14)
+        ax.tick_params(axis="both", which="major", labelsize=12)
+        if self.ra_err:
+            ax.set_title(f"Field {f} (Coverage: {cov:.2f}%)", fontsize=16)
+        else:
+            ax.set_title(f"Field {f}", fontsize=16)
+        plt.tight_layout()
+
+        return fig, ax, self.coordinates.separation(centroid_coords).deg, cov
 
     def plot_finding_chart(self):
         """ """
