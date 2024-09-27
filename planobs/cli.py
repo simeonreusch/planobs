@@ -41,6 +41,8 @@ def plan(
     trigger: bool = False,
     multiday: bool = False,
     alertsource: str = "icecube",
+    ra: Annotated[float, typer.Option(help="directly provide RA of object")] = None,
+    dec: Annotated[float, typer.Option(help="directly provide Dec of object")] = None,
     site: str = "Palomar",
     date: Annotated[str, typer.Option(help="Starting date of planned observation, defaults to today")] = None,
 ):
@@ -64,6 +66,8 @@ def plan(
         alertsource=alertsource,
         site=site,
         date=date,
+        ra=ra,
+        dec=dec
     )
     slackbot.create_plot()
     typer.echo(slackbot.summary)
