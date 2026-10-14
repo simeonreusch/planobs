@@ -80,7 +80,6 @@ class TestPlan(unittest.TestCase):
         plan = MultiDayObservation(
             name=neutrino_name,
             startdate=date,
-            alertsource="icecube",
         )
 
         plt.close()
