@@ -60,6 +60,7 @@ class MultiDayObservation:
                 obswindow=obswindow,
                 max_airmass=self.max_airmass,
                 switch_filters=switch_filters,
+                **kwargs,
             )
         else:
             plan_initial = PlanObservation(
@@ -70,6 +71,7 @@ class MultiDayObservation:
                 obswindow=obswindow,
                 max_airmass=self.max_airmass,
                 switch_filters=switch_filters,
+                **kwargs,
             )
 
         if startdate is None:
@@ -119,6 +121,7 @@ class MultiDayObservation:
                         max_airmass=self.max_airmass,
                         switch_filters=switch_filters,
                         verbose=False,
+                        **kwargs,
                     )
 
                 elif NIGHTS[i] not in SHORT_NIGHTS:
@@ -130,6 +133,7 @@ class MultiDayObservation:
                         max_airmass=self.max_airmass,
                         switch_filters=switch_filters,
                         verbose=False,
+                        **kwargs,
                     )
                 else:
                     if NIGHTS[i] in ONE_FILTER_NIGHTS:
