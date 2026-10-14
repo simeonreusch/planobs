@@ -757,7 +757,7 @@ class PlanObservation:
 
         ccds = fields._CCD_COORDS
         for c in ccds.CCD.unique():
-            if c in self.bad_ccds:
+            if (self.bad_ccds is not None) and (c in self.bad_ccds):
                 continue
             ccd = ccds[ccds.CCD == c][["EW", "NS"]].values
             ccd_draw = Polygon(ccd + centroid)
