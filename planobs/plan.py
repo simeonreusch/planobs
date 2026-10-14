@@ -61,6 +61,7 @@ class PlanObservation:
         site: str | Observer = "Palomar",
         switch_filters: bool = False,
         verbose: bool = True,
+        bad_ccds: list | None = None,
         **kwargs,
     ) -> None:
         self.name = name
@@ -86,6 +87,7 @@ class PlanObservation:
         self.search_full_archive = False
         self.coverage = None
         self.recommended_field = None
+        self.bad_ccds = bad_ccds
 
         if ra is None and self.alertsource in icecube:
             if verbose:
@@ -310,7 +312,6 @@ class PlanObservation:
             # now we divide in two blocks of time if there are two bands required
 
             if len(self.bands) == 2:
-
                 # Create two blocks, separated by self.separation_time minutes
                 divider = int(len(times_included) / 2)
                 logger.debug(f"divider is {divider}")
@@ -364,7 +365,7 @@ class PlanObservation:
                 and self.dec_err[0]
                 and self.dec_err[1]
             ):
-                summarytext += f"RA = {self.coordinates.ra.deg} + {self.ra_err[0]} - {self.ra_err[1]*-1.0}\nDec = {self.coordinates.dec.deg} + {self.dec_err[0]} - {self.dec_err[1]*-1.0}\n"
+                summarytext += f"RA = {self.coordinates.ra.deg} + {self.ra_err[0]} - {self.ra_err[1] * -1.0}\nDec = {self.coordinates.dec.deg} + {self.dec_err[0]} - {self.dec_err[1] * -1.0}\n"
         else:
             summarytext += f"RADEC = {self.coordinates.ra.deg:.8f} {self.coordinates.dec.deg:.8f}\n"
 
@@ -732,7 +733,9 @@ class PlanObservation:
         self.coverage = coverage
         self.distance = distance
 
-        if self.ra_err and len(self.coverage) > 0:  # if ra_err is not available, we can't calculate coverage
+        if (
+            self.ra_err and len(self.coverage) > 0
+        ):  # if ra_err is not available, we can't calculate coverage
             max_coverage_field = max(self.coverage, key=self.coverage.get)
             self.recommended_field = max_coverage_field
         else:
@@ -754,6 +757,8 @@ class PlanObservation:
 
         ccds = fields._CCD_COORDS
         for c in ccds.CCD.unique():
+            if c in self.bad_ccds:
+                continue
             ccd = ccds[ccds.CCD == c][["EW", "NS"]].values
             ccd_draw = Polygon(ccd + centroid)
             ccd_polygons.append(ccd_draw)
